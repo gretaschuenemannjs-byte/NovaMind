@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaMindGS</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&family=Nunito&family=Inter&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <img id="login-bg" src="login-background.png" alt="Login Hintergrund" />
+    <div class="login-form">
+      <h1>NovaMindGS</h1>
+      <input type="email" id="email" placeholder="E-Mail">
+      <input type="password" id="password" placeholder="Passwort">
+      <button id="login-btn">Login</button>
+      <button id="register-btn">Registrieren</button>
+      <div id="login-msg"></div>
+    </div>
+  </div>
+
+  <!-- Haupt-App -->
+  <div id="main-app" style="display:none;">
+    <nav class="bottom-nav">
+      <button data-screen="calendar">Kalender</button>
+      <button data-screen="routines">Routinen</button>
+      <button data-screen="home" class="active">Home</button>
+      <button data-screen="todo">To-Do</button>
+      <button data-screen="profile">Profil</button>
+    </nav>
+
+    <div id="screen-content">
+      <div id="home-screen" class="screen active">
+        <h2>Heute</h2>
+        <div id="today-appointments">Termine</div>
+        <div id="today-routines">Routinen</div>
+        <div id="today-todos">To-Dos</div>
+      </div>
+
+      <div id="calendar-screen" class="screen">Kalender</div>
+      <div id="routines-screen" class="screen">Routinen</div>
+      <div id="todo-screen" class="screen">To-Do</div>
+
+      <div id="profile-screen" class="screen">
+        <h2>Profil & Design</h2>
+        <label for="font-select">Schriftart:</label>
+        <select id="font-select">
+          <option value="'Century Gothic', sans-serif">Century Gothic</option>
+          <option value="Montserrat, sans-serif">Montserrat</option>
+          <option value="Poppins, sans-serif">Poppins</option>
+          <option value="Nunito, sans-serif">Nunito</option>
+          <option value="Inter, sans-serif">Inter</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script src="app.js"></script>
+</body>
+</html>
