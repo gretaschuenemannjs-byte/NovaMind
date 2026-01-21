@@ -1,16 +1,25 @@
+/* --------------------- */
+/* Grund-Styles Body */
+/* --------------------- */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Century Gothic', 'Montserrat', 'Poppins', 'Nunito', 'Inter', sans-serif;
   background-color: #f0f0f0;
+  box-sizing: border-box;
 }
 
-/* Login */
+/* --------------------- */
+/* Login Screen */
+/* --------------------- */
 #login-screen {
-  height: 100vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 100vh; /* Bildschirmfüllend */
+  padding: 20px;
+  position: relative;
 }
 
 #login-bg {
@@ -21,18 +30,27 @@ body {
   z-index: -1;
 }
 
+/* Login Formular */
 .login-form {
   background: rgba(255, 255, 255, 0.9);
   padding: 25px;
   border-radius: 12px;
   text-align: center;
+  width: 90%;           /* Flexibel auf Handy */
+  max-width: 400px;     /* Maximalgröße auf Laptop/Desktop */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .login-form input {
   display: block;
-  width: 80%;
+  width: 90%;          /* Flexibel */
+  max-width: 300px;
   margin: 10px auto;
   padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 .login-form button {
@@ -42,9 +60,18 @@ body {
   color: white;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
 }
 
-/* Screens */
+.login-form button:hover {
+  background-color: #5a74a0;
+}
+
+/* --------------------- */
+/* Screens (Haupt-App) */
+/* --------------------- */
 .screen {
   display: none;
   padding: 20px;
@@ -54,7 +81,9 @@ body {
   display: block;
 }
 
-/* Navigation */
+/* --------------------- */
+/* Navigation Bottom */
+/* --------------------- */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -63,6 +92,7 @@ body {
   display: flex;
   justify-content: space-around;
   padding: 10px 0;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
 }
 
 .bottom-nav button {
@@ -73,4 +103,22 @@ body {
 
 .bottom-nav button.active {
   font-weight: bold;
+}
+
+/* --------------------- */
+/* Responsive Anpassungen */
+/* --------------------- */
+@media (min-width: 768px) {
+  /* Login Formular auf größeren Bildschirmen */
+  .login-form {
+    max-width: 400px;
+    padding: 40px;
+  }
+
+  .login-form input,
+  .login-form button {
+    font-size: 18px;
+    padding: 14px;
+    max-width: 350px;
+  }
 }
