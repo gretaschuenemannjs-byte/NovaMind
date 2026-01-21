@@ -94,6 +94,14 @@
     console.log("Auth Objekt vorhanden:", !!auth);
     console.log("Database Objekt vorhanden:", !!database);
   </script>
+  
+<script>
+  // Test: Realtime Database wirklich verfügbar?
+  const testRef = database.ref("test");
+  testRef.set({ ok: true })
+    .then(() => console.log("Database Test erfolgreich"))
+    .catch(err => console.error("Database Test Fehler:", err));
+</script>
 
 </body>
 </html>
