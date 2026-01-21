@@ -62,46 +62,38 @@
     </div>
   </div>
 
-  <!-- Firebase -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+  <!-- Deine App-Scripts -->
   <script src="app.js"></script>
-<!-- Firebase App (Core SDK) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 
-<!-- Firebase Authentication -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <!-- Firebase Config + Init -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+      authDomain: "novamind-gs.firebaseapp.com",
+      databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "novamind-gs",
+      storageBucket: "novamind-gs.firebasestorage.app",
+      messagingSenderId: "278309634253",
+      appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+    };
 
-<!-- Firebase Realtime Database -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
-    authDomain: "novamind-gs.firebaseapp.com",
-    databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app/",
-    projectId: "novamind-gs",
-    storageBucket: "novamind-gs.firebasestorage.app",
-    messagingSenderId: "278309634253",
-    appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
-  };
+    firebase.initializeApp(firebaseConfig);
 
-  firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+  </script>
 
-  const auth = firebase.auth();
-  const database = firebase.database();
-</script>
-<script>
-  // Test: Firebase App geladen?
-  console.log("Firebase Apps geladen:", firebase.apps.length);
-
-  // Test: Authentication verfügbar?
-  console.log("Auth Objekt vorhanden:", !!auth);
-
-  // Test: Realtime Database verfügbar?
-  console.log("Database Objekt vorhanden:", !!database);
-</script>
+  <!-- Test: Firebase laden -->
+  <script>
+    console.log("Firebase Apps geladen:", firebase.apps.length);
+    console.log("Auth Objekt vorhanden:", !!auth);
+    console.log("Database Objekt vorhanden:", !!database);
+  </script>
 
 </body>
 </html>
