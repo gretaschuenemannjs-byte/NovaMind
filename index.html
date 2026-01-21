@@ -62,13 +62,10 @@
     </div>
   </div>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (nur einmal!) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <!-- Deine App-Scripts -->
-  <script src="app.js"></script>
 
   <!-- Firebase Config + Init -->
   <script>
@@ -88,20 +85,76 @@
     const database = firebase.database();
   </script>
 
+  <!-- App-Funktionalität: Login & Register -->
+  <script>
+    const loginScreen = document.getElementById("login-screen");
+    const mainApp = document.getElementById("main-app");
+    const loginMsg = document.getElementById("login-msg");
+
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const loginBtn = document.getElementById("login-btn");
+    const registerBtn = document.getElementById("register-btn");
+
+    // Login
+    loginBtn.addEventListener("click", () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          loginMsg.textContent = "Erfolgreich eingeloggt!";
+          showMainApp();
+        })
+        .catch(error => {
+          loginMsg.textContent = "Fehler: " + error.message;
+        });
+    });
+
+    // Register
+    registerBtn.addEventListener("click", () => {
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+          loginMsg.textContent = "Account erstellt!";
+          showMainApp();
+        })
+        .catch(error => {
+          loginMsg.textContent = "Fehler: " + error.message;
+        });
+    });
+
+    // Zeige Haupt-App
+    function showMainApp() {
+      loginScreen.style.display = "none";
+      mainApp.style.display = "block";
+    }
+
+    // Auth-State Listener
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        showMainApp();
+      } else {
+        loginScreen.style.display = "block";
+        mainApp.style.display = "none";
+      }
+    });
+  </script>
+
   <!-- Test: Firebase laden -->
   <script>
     console.log("Firebase Apps geladen:", firebase.apps.length);
     console.log("Auth Objekt vorhanden:", !!auth);
     console.log("Database Objekt vorhanden:", !!database);
+
+    // Database Test
+    const testRef = database.ref("test");
+    testRef.set({ ok: true })
+      .then(() => console.log("Database Test erfolgreich"))
+      .catch(err => console.error("Database Test Fehler:", err));
   </script>
-  
-<script>
-  // Test: Realtime Database wirklich verfügbar?
-  const testRef = database.ref("test");
-  testRef.set({ ok: true })
-    .then(() => console.log("Database Test erfolgreich"))
-    .catch(err => console.error("Database Test Fehler:", err));
-</script>
 
 </body>
 </html>
