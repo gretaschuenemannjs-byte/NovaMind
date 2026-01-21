@@ -68,5 +68,30 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
   <script src="app.js"></script>
+<!-- Firebase App (Core SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+
+<!-- Firebase Authentication -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<!-- Firebase Realtime Database -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+    authDomain: "novamind-gs.firebaseapp.com",
+    databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "novamind-gs",
+    storageBucket: "novamind-gs.firebasestorage.app",
+    messagingSenderId: "278309634253",
+    appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const auth = firebase.auth();
+  const database = firebase.database();
+</script>
+
 </body>
 </html>
