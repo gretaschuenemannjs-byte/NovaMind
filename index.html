@@ -92,6 +92,16 @@
   const auth = firebase.auth();
   const database = firebase.database();
 </script>
+<script>
+  // Test: Firebase App geladen?
+  console.log("Firebase Apps geladen:", firebase.apps.length);
+
+  // Test: Authentication verfügbar?
+  console.log("Auth Objekt vorhanden:", !!auth);
+
+  // Test: Realtime Database verfügbar?
+  console.log("Database Objekt vorhanden:", !!database);
+</script>
 
 </body>
 </html>
