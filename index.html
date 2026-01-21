@@ -5,54 +5,190 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NovaMindGS</title>
 
-  <!-- CSS für zentriertes Login -->
+  <!-- --------------------- -->
+  <!-- CSS -->
+  <!-- --------------------- -->
   <style>
+    /* --------------------- */
+    /* Grund-Styles Body */
+    /* --------------------- */
     body {
       margin: 0;
-      min-height: 100vh;
+      padding: 0;
+      font-family: 'Century Gothic', 'Montserrat', 'Poppins', 'Nunito', 'Inter', sans-serif;
+      background-color: #f0f0f0;
+      box-sizing: border-box;
+    }
+
+    /* --------------------- */
+    /* Login Screen */
+    /* --------------------- */
+    #login-screen {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
-      background: #0f172a;
-      font-family: Arial, sans-serif;
+      justify-content: center;
+      min-height: 100vh; 
+      padding: 20px;
+      position: relative;
     }
 
-    .login-box {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      width: 320px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      text-align: center;
-    }
-
-    .login-box input,
-    .login-box button {
+    #login-bg {
+      position: absolute;
       width: 100%;
-      margin-top: 10px;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .login-form {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .login-form img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    .login-form input {
+      display: block;
+      width: 90%;
+      max-width: 300px;
+      margin: 10px auto;
       padding: 10px;
-      font-size: 14px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .login-form button {
+      margin: 5px;
+      padding: 10px 20px;
+      background-color: #6a85b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-form button:hover {
+      background-color: #5a74a0;
+    }
+
+    /* --------------------- */
+    /* Screens */
+    /* --------------------- */
+    .screen {
+      display: none;
+      padding: 20px;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* --------------------- */
+    /* Navigation Bottom */
+    /* --------------------- */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #ffffffdd;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+    }
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .bottom-nav button.active {
+      font-weight: bold;
+    }
+
+    /* --------------------- */
+    /* Responsive Anpassungen */
+    /* --------------------- */
+    @media (min-width: 768px) {
+      .login-form {
+        max-width: 400px;
+        padding: 40px;
+      }
+
+      .login-form input,
+      .login-form button {
+        font-size: 18px;
+        padding: 14px;
+        max-width: 350px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- Login Wrapper -->
-  <div class="login-box">
-    <h1>NovaMindGS</h1>
-    <input type="email" id="email" placeholder="E-Mail">
-    <input type="password" id="password" placeholder="Passwort">
-    <button id="login-btn">Login</button>
-    <button id="register-btn">Registrieren</button>
+  <!-- --------------------- -->
+  <!-- Login Screen -->
+  <!-- --------------------- -->
+  <div id="login-screen">
+    <!-- Hintergrundbild -->
+    <img id="login-bg" src="login-background.png" alt="Hintergrund">
+
+    <div class="login-form">
+      <!-- Logo -->
+      <img src="icon-512.png" alt="Logo">
+      <h1>NovaMindGS</h1>
+
+      <input type="email" id="email" placeholder="E-Mail">
+      <input type="password" id="password" placeholder="Passwort">
+      <button id="login-btn">Login</button>
+      <button id="register-btn">Registrieren</button>
+    </div>
   </div>
 
+  <!-- --------------------- -->
+  <!-- Haupt-App Screens -->
+  <!-- --------------------- -->
+  <div class="screen" id="home-screen">
+    <h2>Willkommen!</h2>
+    <p>Hier ist deine Haupt-App.</p>
+    <button id="logout-btn">Logout</button>
+  </div>
+
+  <div class="screen" id="settings-screen">
+    <h2>Einstellungen</h2>
+    <p>Hier kannst du später Optionen hinzufügen.</p>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-btn active" data-target="home-screen">Home</button>
+    <button class="nav-btn" data-target="settings-screen">Einstellungen</button>
+  </div>
+
+  <!-- --------------------- -->
   <!-- Firebase SDKs -->
+  <!-- --------------------- -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+  <!-- --------------------- -->
   <!-- Firebase Config -->
+  <!-- --------------------- -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
@@ -64,63 +200,101 @@
       appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
     };
 
-    // Firebase initialisieren
     firebase.initializeApp(firebaseConfig);
-
-    // Objekte für Auth & Database
     const auth = firebase.auth();
     const database = firebase.database();
   </script>
 
-  <!-- Test: Funktioniert Firebase? -->
+  <!-- --------------------- -->
+  <!-- Firebase + App Logic -->
+  <!-- --------------------- -->
   <script>
-    console.log("Firebase Apps geladen:", firebase.apps.length);
-    console.log("Auth Objekt vorhanden:", !!auth);
-    console.log("Database Objekt vorhanden:", !!database);
-  </script>
-
-  <!-- Login + Registrierung -->
-  <script>
+    // Elemente
+    const loginScreen = document.getElementById("login-screen");
+    const homeScreen = document.getElementById("home-screen");
+    const settingsScreen = document.getElementById("settings-screen");
+    const logoutBtn = document.getElementById("logout-btn");
     const loginBtn = document.getElementById("login-btn");
     const registerBtn = document.getElementById("register-btn");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
 
+    // Navigation Bottom
+    const navButtons = document.querySelectorAll(".nav-btn");
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        const target = document.getElementById(btn.dataset.target);
+        target.classList.add("active");
+        navButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+
+    // -----------------------------
+    // Auth Zustand prüfen (Auto-Login)
+    // -----------------------------
+    auth.onAuthStateChanged(user => {
+      if(user) {
+        loginScreen.style.display = "none";
+        homeScreen.classList.add("active");
+        console.log("User eingeloggt:", user.email);
+      } else {
+        loginScreen.style.display = "flex";
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      }
+    });
+
+    // -----------------------------
+    // Login
+    // -----------------------------
     loginBtn.addEventListener("click", () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
+      const email = emailInput.value;
+      const password = passwordInput.value;
       auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
+        .then(userCredential => {
           console.log("Login erfolgreich:", userCredential.user.email);
-          alert("Login erfolgreich: " + userCredential.user.email);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Login Fehler:", error.message);
           alert("Login Fehler: " + error.message);
         });
     });
 
+    // -----------------------------
+    // Registrierung
+    // -----------------------------
     registerBtn.addEventListener("click", () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-
+      const email = emailInput.value;
+      const password = passwordInput.value;
       auth.createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
+        .then(userCredential => {
           console.log("Registrierung erfolgreich:", userCredential.user.email);
-          alert("Registrierung erfolgreich: " + userCredential.user.email);
-
-          // Benutzer in Realtime Database speichern
           const userId = userCredential.user.uid;
           database.ref("users/" + userId).set({
             email: email,
             createdAt: new Date().toISOString()
           });
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Registrierung Fehler:", error.message);
           alert("Registrierung Fehler: " + error.message);
         });
     });
+
+    // -----------------------------
+    // Logout
+    // -----------------------------
+    logoutBtn.addEventListener("click", () => {
+      auth.signOut()
+        .then(() => console.log("Logout erfolgreich"))
+        .catch(error => console.error("Logout Fehler:", error.message));
+    });
   </script>
+
+</body>
+</html>
+
 
 </body>
 </html>
