@@ -18,10 +18,11 @@ html, body {
 /* LOGIN SCREEN */
 #login-screen {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* nach oben */
   justify-content: center;
   height: 100%;
   width: 100%;
+  padding-top: 80px; /* Abstand oben */
 }
 
 .login-form {
@@ -57,9 +58,7 @@ html, body {
   font-size: 16px;
 }
 
-.login-form input::placeholder {
-  color: #fff;
-}
+.login-form input::placeholder { color: #fff; }
 
 .button-row {
   display: flex;
@@ -79,9 +78,7 @@ html, body {
   transition: background 0.3s ease;
 }
 
-.button-row button:hover {
-  background: #16322f;
-}
+.button-row button:hover { background: #16322f; }
 
 /* SCREENS */
 .screen {
@@ -90,16 +87,17 @@ html, body {
   padding: 16px;
 }
 
-.screen.active {
-  display: block;
-  opacity: 1;
-}
+.screen.active { display: block; opacity: 1; }
 
 /* HOME SCREEN */
-.home-title h2 {
-  text-align: center;
+.home-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 12px;
 }
+
+.home-title h2 { margin: 0; font-weight: normal; }
 
 .home-cards {
   display: flex;
@@ -121,18 +119,11 @@ html, body {
   max-width: 360px;
 }
 
-.home-card:active {
-  cursor: grabbing;
-}
+.home-card:active { cursor: grabbing; }
 
-.card-title {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
+.card-title { font-weight: bold; margin-bottom: 8px; }
 
-.card-content {
-  font-size: 14px;
-}
+.card-content { font-size: 14px; }
 
 .card-task {
   display: flex;
@@ -189,13 +180,8 @@ html, body {
   margin: 0 2px;
 }
 
-.nav-btn svg {
-  stroke: #fff;
-}
-
-.nav-btn.active {
-  background: var(--accent-color);
-}
+.nav-btn svg { stroke: #fff; }
+.nav-btn.active { background: var(--accent-color); }
 
 /* SETTINGS BUTTONS */
 .settings-buttons {
@@ -215,14 +201,10 @@ html, body {
   font-size: 16px;
 }
 
-.settings-buttons select {
-  appearance: none;
-}
+.settings-buttons select { appearance: none; }
 
 /* RESPONSIVE */
 @media (max-width: 480px) {
-  .home-card {
-    flex: 1 1 90%;
-    min-width: 90%;
-  }
+  .home-card { flex: 1 1 90%; min-width: 90%; }
+  #login-screen { padding-top: 60px; }
 }
