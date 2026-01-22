@@ -1,6 +1,8 @@
 :root {
   --login-color: #1e3d3b;
   --glass-bg: rgba(255,255,255,0.18);
+  --accent-color: rgba(50,160,100,0.85);
+  --checked-color: #aaa;
 }
 
 html, body {
@@ -101,8 +103,9 @@ html, body {
 
 .home-cards {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 14px;
+  justify-content: center;
 }
 
 .home-card {
@@ -113,6 +116,9 @@ html, body {
   padding: 14px 16px;
   cursor: grab;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex: 1 1 260px;
+  min-width: 240px;
+  max-width: 360px;
 }
 
 .home-card:active {
@@ -138,6 +144,15 @@ html, body {
 .card-task input[type="checkbox"] {
   transform: scale(1.2);
   cursor: pointer;
+}
+
+.card-task.completed label {
+  text-decoration: line-through;
+  color: var(--checked-color);
+}
+
+.card-task.completed input[type="checkbox"] {
+  accent-color: var(--checked-color);
 }
 
 /* MOTIVATION CARD */
@@ -179,7 +194,7 @@ html, body {
 }
 
 .nav-btn.active {
-  background: rgba(50,160,100,0.85);
+  background: var(--accent-color);
 }
 
 /* SETTINGS BUTTONS */
@@ -194,7 +209,7 @@ html, body {
   padding: 12px;
   border-radius: 12px;
   border: none;
-  background: rgba(50,160,100,0.85);
+  background: var(--accent-color);
   color: #fff;
   cursor: pointer;
   font-size: 16px;
@@ -205,9 +220,9 @@ html, body {
 }
 
 /* RESPONSIVE */
-@media (min-width: 480px) {
+@media (max-width: 480px) {
   .home-card {
-    max-width: 440px;
-    margin: 0 auto;
+    flex: 1 1 90%;
+    min-width: 90%;
   }
 }
