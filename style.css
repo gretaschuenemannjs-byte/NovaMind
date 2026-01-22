@@ -17,7 +17,6 @@ body {
   justify-content: center;
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
 }
 
 #login-bg {
@@ -29,7 +28,6 @@ body {
   z-index: -1;
 }
 
-/* Login-Feld */
 .login-form {
   background: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(14px);
@@ -42,7 +40,6 @@ body {
   box-shadow: 0 8px 30px rgba(0,0,0,0.25);
 }
 
-/* Rundes Logo */
 .login-logo {
   width: 96px;
   height: 96px;
@@ -59,7 +56,6 @@ body {
   font-size: 1.6rem;
 }
 
-/* Inputs */
 .login-form input {
   display: block;
   width: 100%;
@@ -126,20 +122,17 @@ body {
   color: white;
 }
 
-/* --------------------- */
-/* Bottom Navigation */
+/* Bottom Nav */
 .bottom-nav {
-  display: none; /* wird auf Login ausgeblendet */
+  display: none; /* erst sichtbar nach Login */
 }
 
-/* --------------------- */
-/* Responsive Anpassungen */
+/* Responsive */
 @media (min-width: 768px) {
   .login-form {
     max-width: 400px;
     padding: 40px;
   }
-
   .login-form input,
   .button-row button,
   .home-buttons button {
