@@ -17,6 +17,8 @@ body {
   justify-content: center;
   min-height: 100vh;
   position: relative;
+  opacity: 1; /* NEU: für sanftes Ausblenden */
+  transition: opacity 0.6s ease-in-out; /* NEU */
 }
 
 #login-bg {
@@ -94,13 +96,16 @@ body {
 
 /* --------------------- */
 /* Screens (Home etc.) */
+/* --------------------- */
 .screen {
   display: none;
-  padding: 20px;
+  opacity: 0; /* NEU: für sanftes Einblenden */
+  transition: opacity 0.6s ease-in-out; /* NEU */
 }
 
 .screen.active {
   display: block;
+  opacity: 1; /* NEU */
 }
 
 /* Home Buttons */
