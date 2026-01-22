@@ -7,6 +7,7 @@ const logoutBtn = document.getElementById("logout-btn");
 const homeCardsContainer = document.getElementById("home-cards");
 const currentDateEl = document.getElementById("current-date");
 const fontSelect = document.getElementById("font-select");
+const calendarView = document.getElementById("calendar-view");
 
 const navButtons = document.querySelectorAll(".nav-btn");
 
@@ -55,6 +56,14 @@ function renderHomeCards() {
     if(card.type === "motivation") {
       content.classList.add("motivation-card");
       content.textContent = card.quote;
+    } else if(card.type === "calendar") {
+      // Tagesübersicht
+      content.innerHTML = `<div>Kalender-Ansicht (${calendarView.value})</div>`;
+      card.tasks.forEach(t => {
+        const taskDiv = document.createElement("div");
+        taskDiv.textContent = t.text;
+        content.appendChild(taskDiv);
+      });
     } else {
       card.tasks.forEach((task) => {
         const taskDiv = document.createElement("div");
@@ -118,6 +127,9 @@ fontSelect.addEventListener("change", () => {
   document.body.style.fontFamily = fontSelect.value;
 });
 
+// Kalenderansicht wechseln
+calendarView.addEventListener("change", () => renderHomeCards());
+
 // UI updaten
 function updateUI() {
   if(isLoggedIn) {
@@ -144,3 +156,4 @@ logoutBtn.addEventListener("click", () => { isLoggedIn = false; updateUI(); });
 
 // Initial
 updateUI();
+
