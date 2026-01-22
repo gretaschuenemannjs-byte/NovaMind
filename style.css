@@ -5,73 +5,99 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Century Gothic', 'Montserrat', 'Poppins', 'Nunito', 'Inter', sans-serif;
-  background-color: #f0f0f0;
   box-sizing: border-box;
 }
 
 /* --------------------- */
-/* Login Screen */
+/* LOGIN SCREEN */
 /* --------------------- */
 #login-screen {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Bildschirmfüllend */
-  padding: 20px;
+  min-height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 #login-bg {
   position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   z-index: -1;
 }
 
-/* Login Formular */
+/* Login-Feld */
 .login-form {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 25px;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 32px;
+  border-radius: 20px;
   text-align: center;
-  width: 90%;           /* Flexibel auf Handy */
-  max-width: 400px;     /* Maximalgröße auf Laptop/Desktop */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
 }
 
+/* Rundes Logo */
+.login-logo {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  border: 2px solid rgba(255,255,255,0.4);
+}
+
+.login-form h1 {
+  color: #fff;
+  margin-bottom: 20px;
+  font-size: 1.6rem;
+}
+
+/* Inputs */
 .login-form input {
   display: block;
-  width: 90%;          /* Flexibel */
-  max-width: 300px;
-  margin: 10px auto;
-  padding: 10px;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
   font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: none;
+  outline: none;
   box-sizing: border-box;
 }
 
-.login-form button {
-  margin: 5px;
-  padding: 10px 20px;
-  background-color: #6a85b6;
+/* Buttons nebeneinander */
+.button-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.button-row button {
+  flex: 1;
+  background: rgba(60, 180, 120, 0.85);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
+  padding: 12px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  transition: background 0.3s ease;
 }
 
-.login-form button:hover {
-  background-color: #5a74a0;
+.button-row button:hover {
+  background: rgba(60, 180, 120, 1);
 }
 
 /* --------------------- */
-/* Screens (Haupt-App) */
-/* --------------------- */
+/* Screens (Home etc.) */
 .screen {
   display: none;
   padding: 20px;
@@ -81,44 +107,43 @@ body {
   display: block;
 }
 
-/* --------------------- */
-/* Navigation Bottom */
-/* --------------------- */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #ffffffdd;
+/* Home Buttons */
+.home-buttons {
   display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-  box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
 }
 
-.bottom-nav button {
-  background: none;
+.home-buttons button {
+  padding: 15px 20px;
+  font-size: 16px;
+  border-radius: 10px;
   border: none;
-  font-size: 1rem;
+  cursor: pointer;
+  background-color: #6a85b6;
+  color: white;
 }
 
-.bottom-nav button.active {
-  font-weight: bold;
+/* --------------------- */
+/* Bottom Navigation */
+.bottom-nav {
+  display: none; /* wird auf Login ausgeblendet */
 }
 
 /* --------------------- */
 /* Responsive Anpassungen */
-/* --------------------- */
 @media (min-width: 768px) {
-  /* Login Formular auf größeren Bildschirmen */
   .login-form {
     max-width: 400px;
     padding: 40px;
   }
 
   .login-form input,
-  .login-form button {
+  .button-row button,
+  .home-buttons button {
     font-size: 18px;
     padding: 14px;
-    max-width: 350px;
   }
 }
