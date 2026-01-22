@@ -28,11 +28,19 @@ navButtons.forEach(btn => {
 // Auth Status prüfen
 auth.onAuthStateChanged(user => {
   if(user) {
-    loginScreen.style.display = "none";
-    homeScreen.classList.add("active");
-    document.querySelector(".bottom-nav").style.display = "flex";
+    // NEU: Sanfter Übergang Login → Home
+    loginScreen.style.opacity = 1;
+    loginScreen.style.transition = "opacity 0.6s ease-in-out";
+    loginScreen.style.opacity = 0;
+
+    setTimeout(() => {
+      loginScreen.style.display = "none";
+      homeScreen.classList.add("active");
+      document.querySelector(".bottom-nav").style.display = "flex";
+    }, 600); // entspricht der Transition Dauer
   } else {
     loginScreen.style.display = "flex";
+    loginScreen.style.opacity = 1;
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
     document.querySelector(".bottom-nav").style.display = "none";
   }
@@ -43,7 +51,10 @@ loginBtn.addEventListener("click", () => {
   const email = emailInput.value;
   const password = passwordInput.value;
   auth.signInWithEmailAndPassword(email, password)
-    .then(userCredential => console.log("Login erfolgreich:", userCredential.user.email))
+    .then(userCredential => {
+      console.log("Login erfolgreich:", userCredential.user.email);
+      // Übergang passiert automatisch
+    })
     .catch(error => alert("Login Fehler: " + error.message));
 });
 
