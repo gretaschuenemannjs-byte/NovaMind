@@ -1,60 +1,43 @@
-// DOM Elemente
 const loginScreen = document.getElementById("login-screen");
 const homeScreen = document.getElementById("home-screen");
 const settingsScreen = document.getElementById("settings-screen");
 const loginBtn = document.getElementById("login-btn");
 const registerBtn = document.getElementById("register-btn");
 const logoutBtn = document.getElementById("logout-btn");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
 const homeCardsContainer = document.getElementById("home-cards");
 const currentDateEl = document.getElementById("current-date");
+const fontSelect = document.getElementById("font-select");
 
 const navButtons = document.querySelectorAll(".nav-btn");
 
-// Simulierter Login-Status
+// Login Status
 let isLoggedIn = false;
 
-// Datenstruktur für Home-Kacheln
+// Tagesübersicht-Kacheln
 let homeCardsData = [
-  {
-    type: "tasks",
-    title: "ToDos",
-    tasks: [
+  { type: "tasks", title: "ToDos", tasks: [
       { text: "E-Mail beantworten", done: false },
-      { text: "Meeting vorbereiten", done: true }
-    ]
-  },
-  {
-    type: "routines",
-    title: "Routinen",
-    tasks: [
+      { text: "Meeting vorbereiten", done: false }
+    ]},
+  { type: "routines", title: "Routinen", tasks: [
       { text: "Meditation", done: false },
       { text: "Workout", done: false }
-    ]
-  },
-  {
-    type: "calendar",
-    title: "Kalender",
-    tasks: [
+    ]},
+  { type: "calendar", title: "Kalender", tasks: [
       { text: "Projektbesprechung 10:00", done: false },
       { text: "Arzttermin 15:30", done: false }
-    ]
-  },
-  {
-    type: "motivation",
-    title: "Motivation",
-    quote: "Du schaffst alles, was du dir vornimmst!"
-  }
+    ]},
+  { type: "motivation", title: "Motivation", quote: "Du schaffst alles, was du dir vornimmst!"}
 ];
 
-// Funktion: Datum anzeigen
+// Datum
 function updateDate() {
   const now = new Date();
-  currentDateEl.textContent = now.toLocaleDateString("de-DE", { weekday:"long", day:"numeric", month:"long"});
+  const options = { weekday:"short", day:"numeric", month:"short", year:"numeric"};
+  currentDateEl.textContent = now.toLocaleDateString("de-DE", options);
 }
 
-// Funktion: Home-Kacheln rendern
+// Home-Kacheln rendern
 function renderHomeCards() {
   homeCardsContainer.innerHTML = "";
   homeCardsData.forEach((card, index) => {
@@ -74,7 +57,7 @@ function renderHomeCards() {
       content.classList.add("motivation-card");
       content.textContent = card.quote;
     } else {
-      card.tasks.forEach((task, tIndex) => {
+      card.tasks.forEach((task) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("card-task");
 
@@ -95,13 +78,26 @@ function renderHomeCards() {
     }
 
     div.appendChild(content);
-
-    // Klick → Detailansicht (optional)
-    div.addEventListener("click", () => {
-      alert(`Detailansicht für "${card.title}" (hier kann bearbeitet werden)`);
-    });
-
     homeCardsContainer.appendChild(div);
+  });
+
+  // Drag & Drop
+  let dragSrcIndex = null;
+  homeCardsContainer.querySelectorAll(".home-card").forEach(card => {
+    card.draggable = true;
+    card.addEventListener("dragstart", (e) => {
+      dragSrcIndex = card.dataset.index;
+      e.dataTransfer.effectAllowed = "move";
+    });
+    card.addEventListener("dragover", (e) => e.preventDefault());
+    card.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const targetIndex = card.dataset.index;
+      const temp = homeCardsData[dragSrcIndex];
+      homeCardsData.splice(dragSrcIndex, 1);
+      homeCardsData.splice(targetIndex, 0, temp);
+      renderHomeCards();
+    });
   });
 }
 
@@ -116,6 +112,11 @@ navButtons.forEach(btn => {
   });
 });
 
+// Schriftart ändern
+fontSelect.addEventListener("change", () => {
+  document.body.style.fontFamily = fontSelect.value;
+});
+
 // UI updaten
 function updateUI() {
   if(isLoggedIn) {
@@ -123,12 +124,8 @@ function updateUI() {
     homeScreen.classList.add("active");
     document.querySelector(".bottom-nav").style.display = "flex";
 
-    // Accent-Farbe automatisch an Hintergrund (leicht transparent)
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    document.documentElement.style.setProperty('--glass-bg', 'rgba(255,255,255,0.18)');
-
-    updateDate();
     renderHomeCards();
+    updateDate();
   } else {
     loginScreen.style.display = "flex";
     loginScreen.style.opacity = 1;
@@ -138,20 +135,11 @@ function updateUI() {
 }
 
 // Login/Register
-loginBtn.addEventListener("click", () => {
-  isLoggedIn = true;
-  updateUI();
-});
-registerBtn.addEventListener("click", () => {
-  isLoggedIn = true;
-  updateUI();
-});
+loginBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
+registerBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
 
 // Logout
-logoutBtn.addEventListener("click", () => {
-  isLoggedIn = false;
-  updateUI();
-});
+logoutBtn.addEventListener("click", () => { isLoggedIn = false; updateUI(); });
 
-// Initial UI
+// Initial
 updateUI();
