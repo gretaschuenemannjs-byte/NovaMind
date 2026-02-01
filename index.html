@@ -1,134 +1,111 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaMindGS</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-// Firebase-Konfiguration (wie zuvor)
-const firebaseConfig = {
-  apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
-  authDomain: "novamind-gs.firebaseapp.com",
-  databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "novamind-gs",
-  storageBucket: "novamind-gs.firebasestorage.app",
-  messagingSenderId: "278309634253",
-  appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
-};
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-form">
+    <img src="icon-512.png" alt="Logo" class="login-logo">
+    <input type="email" id="email" placeholder="E-Mail">
+    <input type="password" id="password" placeholder="Passwort">
+    <div class="button-row">
+      <button id="login-btn">Login</button>
+      <button id="register-btn">Registrieren</button>
+    </div>
+  </div>
+</div>
 
-// Firebase Init
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+<!-- HOME SCREEN -->
+<div class="screen" id="home-screen">
+  <div class="home-title">
+    <h2 id="current-date"></h2>
+  </div>
+  <div class="home-cards" id="home-cards"></div>
+</div>
 
-// Elemente
-const loginScreen = document.getElementById("login-screen");
-const homeScreen = document.getElementById("home-screen");
-const healthScreen = document.getElementById("health-screen");
-const profileScreen = document.getElementById("profile-screen");
-const loginBtn = document.getElementById("login-btn");
-const registerBtn = document.getElementById("register-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const navButtons = document.querySelectorAll(".nav-btn");
+<!-- SETTINGS SCREEN -->
+<div class="screen" id="settings-screen">
+  <h2>Einstellungen</h2>
+  <div class="settings-buttons">
+    <label for="font-select">Schriftart auswählen:</label>
+    <select id="font-select">
+      <option value="Century Gothic" selected>Century Gothic</option>
+      <option value="Arial">Arial</option>
+      <option value="Verdana">Verdana</option>
+      <option value="Poppins">Poppins</option>
+    </select>
+    <button id="logout-btn">Logout</button>
+  </div>
+</div>
 
-// Health Elemente
-const healthDate = document.getElementById("health-date");
-const healthTime = document.getElementById("health-time");
-const painLevel = document.getElementById("pain-level");
-const painValue = document.getElementById("pain-value");
-const painType = document.getElementById("pain-type");
-const painOther = document.getElementById("pain-other");
-const meds = document.getElementById("meds");
-const medOther = document.getElementById("med-other");
-const saveHealth = document.getElementById("save-health");
-const exportHealth = document.getElementById("export-health");
-const healthCalendar = document.getElementById("health-calendar");
+<!-- HEALTH SCREEN -->
+<div class="screen" id="health-screen">
+  <h2>Gesundheit</h2>
+  <div id="health-content">
+    <!-- Health-Funktionen werden später ergänzt -->
+    <p>Hier erscheint später der Health-Kalender und Eingabemodule</p>
+  </div>
+</div>
 
-// Login/Register
-loginBtn.addEventListener("click", ()=>{
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  signInWithEmailAndPassword(auth,email,password).catch(err=>alert(err.message));
-});
+<!-- PLACEHOLDER SCREENS -->
+<div class="screen" id="notes-screen"></div>
+<div class="screen" id="todos-screen"></div>
+<div class="screen" id="routines-screen"></div>
+<div class="screen" id="calendar-screen"></div>
+<div class="screen" id="profile-screen"></div>
 
-registerBtn.addEventListener("click", ()=>{
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  createUserWithEmailAndPassword(auth,email,password).catch(err=>alert(err.message));
-});
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn" data-target="notes-screen" title="Notizen">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="4" y1="12" x2="20" y2="12"/>
+      <line x1="4" y1="18" x2="20" y2="18"/>
+    </svg>
+  </button>
+  <button class="nav-btn" data-target="todos-screen" title="To-Dos">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <rect x="4" y="5" width="16" height="16" rx="2"/>
+      <path d="M6 12l4 4 8-8"/>
+    </svg>
+  </button>
+  <button class="nav-btn" data-target="routines-screen" title="Routine">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M12 6v6l4 2"/>
+    </svg>
+  </button>
+  <button class="nav-btn active" data-target="home-screen" title="Home">
+    <svg viewBox="0 0 24 24" width="28" height="28" stroke="#fff" fill="none" stroke-width="2">
+      <path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    </svg>
+  </button>
+  <button class="nav-btn" data-target="calendar-screen" title="Kalender">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <path d="M16 2v4M8 2v4"/>
+    </svg>
+  </button>
+  <button class="nav-btn" data-target="health-screen" title="Gesundheit">
+    <!-- Symmetrisches Linien-Herz -->
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <path d="M12 21C12 21 6 16.35 2 10.5 2 5.75 6.75 2 12 7.5 17.25 2 22 5.75 22 10.5 18 16.35 12 21 12 21Z"/>
+    </svg>
+  </button>
+  <button class="nav-btn" data-target="profile-screen" title="Profil">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 20c0-4 8-4 8-4s8 0 8 4"/>
+    </svg>
+  </button>
+</div>
 
-// Logout
-logoutBtn.addEventListener("click", ()=> signOut(auth));
-
-// Auth State
-onAuthStateChanged(auth,user=>{
-  if(user){
-    loginScreen.style.display="none";
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    homeScreen.classList.add("active");
-    document.querySelector(".bottom-nav").style.display="flex";
-  } else {
-    loginScreen.style.display="flex";
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    document.querySelector(".bottom-nav").style.display="none";
-  }
-});
-
-// Navigation
-navButtons.forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    const target = document.getElementById(btn.dataset.target);
-    if(target) target.classList.add("active");
-    navButtons.forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-  });
-});
-
-// Health-Screen Logik
-const healthEntries = JSON.parse(localStorage.getItem("healthEntries"))||[];
-
-function renderHealthCalendar(){
-  healthCalendar.innerHTML="";
-  healthEntries.forEach((e,i)=>{
-    const div=document.createElement("div");
-    div.classList.add("home-card");
-    div.innerHTML=`<strong>${e.date} ${e.time}</strong><br>Typ: ${e.pain}<br>Stärke: ${e.level}<br>Medikamente: ${e.meds.join(", ")}<br><button data-index="${i}" class="delete-health">Löschen</button>`;
-    healthCalendar.appendChild(div);
-  });
-  document.querySelectorAll(".delete-health").forEach(btn=>{
-    btn.addEventListener("click",(ev)=>{
-      const idx = ev.target.dataset.index;
-      healthEntries.splice(idx,1);
-      localStorage.setItem("healthEntries",JSON.stringify(healthEntries));
-      renderHealthCalendar();
-    });
-  });
-}
-
-// Slider Update
-painLevel.addEventListener("input",()=>{ painValue.textContent=painLevel.value; });
-
-// Speichern
-saveHealth.addEventListener("click",()=>{
-  const entry={
-    date: healthDate.value,
-    time: healthTime.value,
-    pain: painType.value==="Sonstige"?painOther.value:painType.value,
-    level: painLevel.value,
-    meds: Array.from(meds.selectedOptions).map(o=>o.value).concat(medOther.value?medOther.value:[])
-  };
-  healthEntries.push(entry);
-  localStorage.setItem("healthEntries",JSON.stringify(healthEntries));
-  renderHealthCalendar();
-});
-
-// PDF Export
-exportHealth.addEventListener("click",()=>{
-  const doc = new jsPDF();
-  healthEntries.forEach((e,i)=>{
-    doc.text(`${e.date} ${e.time} | Typ: ${e.pain} | Stärke: ${e.level} | Meds: ${e.meds.join(", ")}`,10,10+i*10);
-  });
-  doc.save("health-export.pdf");
-});
-
-// Init Health-Date & Time
-const now = new Date();
-healthDate.value = now.toISOString().split("T")[0];
-healthTime.value = now.toTimeString().split(" ")[0].substring(0,5);
-renderHealthCalendar();
+<script type="module" src="app.js"></script>
+</body>
+</html>
