@@ -10,8 +10,6 @@ const fontSelect = document.getElementById("font-select");
 
 const navButtons = document.querySelectorAll(".nav-btn");
 
-let isLoggedIn = false;
-
 // Home-Kacheln Daten
 let homeCardsData = [
   { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }, { text: "Meeting vorbereiten", done: false }]},
@@ -173,11 +171,45 @@ function updateUI() {
 }
 
 // Login/Register
-loginBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
-registerBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
+loginBtn.addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .catch(error => {
+      alert(error.message);
+    });
+});
+
+registerBtn.addEventListener("click", () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .catch(error => {
+      alert(error.message);
+    });
+});
+
 
 // Logout
-logoutBtn.addEventListener("click", () => { isLoggedIn = false; updateUI(); });
+logoutBtn.addEventListener("click", () => {
+  auth.signOut();
+});
 
 // Initial
-updateUI();
+auth.onAuthStateChanged(user => {
+  if(user) {
+    loginScreen.style.display = "none";
+    homeScreen.classList.add("active");
+    document.querySelector(".bottom-nav").style.display = "flex";
+
+    renderHomeCards();
+    updateDate();
+  } else {
+    loginScreen.style.display = "flex";
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.querySelector(".bottom-nav").style.display = "none";
+  }
+});
+
