@@ -25,47 +25,34 @@ const registerBtn = document.getElementById("register-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const navButtons = document.querySelectorAll(".nav-btn");
 
-loginBtn.addEventListener("click", () => {
+loginBtn.addEventListener("click", ()=>{
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      loginScreen.style.display = "none";
-      homeScreen.classList.add("active");
-    })
-    .catch(err => { alert(err.message); });
+  signInWithEmailAndPassword(auth,email,password)
+    .then(()=>{ loginScreen.style.display="none"; homeScreen.classList.add("active"); })
+    .catch(err=>{ alert(err.message); });
 });
 
-registerBtn.addEventListener("click", () => {
+registerBtn.addEventListener("click", ()=>{
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      loginScreen.style.display = "none";
-      homeScreen.classList.add("active");
-    })
-    .catch(err => { alert(err.message); });
+  createUserWithEmailAndPassword(auth,email,password)
+    .then(()=>{ loginScreen.style.display="none"; homeScreen.classList.add("active"); })
+    .catch(err=>{ alert(err.message); });
 });
 
-logoutBtn && logoutBtn.addEventListener("click", () => {
-  signOut(auth).then(() => { location.reload(); });
-});
+logoutBtn.addEventListener("click", ()=>{ signOut(auth).then(()=>{ location.reload(); }); });
 
-onAuthStateChanged(auth, (user) => {
-  if(user) {
-    loginScreen.style.display = "none";
-    homeScreen.classList.add("active");
-  } else {
-    loginScreen.style.display = "flex";
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  }
+onAuthStateChanged(auth,(user)=>{
+  if(user){ loginScreen.style.display="none"; homeScreen.classList.add("active"); }
+  else { loginScreen.style.display="flex"; document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); }
 });
 
 // NAVIGATION
-navButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+navButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
     document.getElementById(btn.dataset.target).classList.add("active");
     btn.classList.add("active");
   });
