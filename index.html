@@ -29,7 +29,43 @@
 
 <!-- HEALTH SCREEN -->
 <div id="health-screen" class="screen">
-  <div class="card">Health Screen Platzhalter</div>
+  <div class="health-left">
+    <div class="health-input card">
+      <h3>Schmerz & Medikamente</h3>
+      <label>Datum</label>
+      <input type="date" id="health-date">
+      <label>Uhrzeit</label>
+      <input type="time" id="health-time">
+      <label>Schmerztyp</label>
+      <select id="pain-type">
+        <option value="migräne">Migräne</option>
+        <option value="spannung">Spannungskopfschmerzen</option>
+        <option value="sonstige">Sonstige</option>
+      </select>
+      <label>Schmerzstärke</label>
+      <input type="range" min="1" max="10" value="1" id="pain-level">
+      <span id="pain-level-value">1</span>
+      <label>Medikamente</label>
+      <select multiple id="medications">
+        <option value="triptane">Triptane</option>
+        <option value="paracetamol">Paracetamol</option>
+        <option value="ibuprofen">Ibuprofen</option>
+      </select>
+      <button class="primary" id="save-health-entry">Speichern</button>
+    </div>
+    <div class="health-supplements card">
+      <h3>Supplements & Erinnerungen</h3>
+      <p>Platzhalter für Supplements & Erinnerungstool</p>
+    </div>
+    <div class="health-export card">
+      <h3>Export</h3>
+      <button class="primary" id="export-pdf">PDF Export</button>
+    </div>
+  </div>
+  <div class="health-right card health-calendar">
+    <h3>Kalenderübersicht</h3>
+    <p>Kalenderplatzhalter für Kopfschmerz & Medikamente</p>
+  </div>
 </div>
 
 <!-- SETTINGS SCREEN -->
