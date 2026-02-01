@@ -184,6 +184,44 @@ button.secondary {
   border: 1px solid rgba(255,255,255,0.08);
 }
 
+/* DATUM UND UHRZEIT IN EINER REIHE */
+.health-input .datetime-row {
+  display: flex;
+  gap: 12px;
+}
+
+.health-input .datetime-row input {
+  flex: 1;
+}
+
+/* SCHMERZSTÄRKE SLIDER */
+.health-input .pain-slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.health-input .pain-slider input[type=range] {
+  flex: 1;
+}
+
+/* MEDIKAMENTE AUSWAHL */
+.health-input .medications {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.health-input .medications button {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(30,30,40,0.8);
+  color: #f8fafc;
+  cursor: pointer;
+}
+
 /* KALENDER PLATZHALTER */
 .health-calendar {
   min-height: 300px;
