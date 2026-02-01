@@ -29,6 +29,49 @@
   <div class="home-cards" id="home-cards"></div>
 </div>
 
+<!-- HEALTH SCREEN -->
+<div class="screen" id="health-screen">
+  <h2>Gesundheit</h2>
+
+  <!-- Schmerztracking -->
+  <div id="pain-tracker" class="health-card">
+    <h3>Schmerzen & Migräne eintragen</h3>
+
+    <label>Schmerzstärke: <span id="pain-intensity-label">5</span></label>
+    <input type="range" id="pain-intensity" min="0" max="10" value="5">
+
+    <label>Schmerztyp:</label>
+    <select id="pain-type">
+      <option>Migräne</option>
+      <option>Spannungskopfschmerz</option>
+      <option>Sonstiges</option>
+    </select>
+
+    <label>Notizen:</label>
+    <textarea id="pain-notes" placeholder="Optional"></textarea>
+
+    <label>
+      <input type="checkbox" id="pain-medication-toggle">
+      Medikament eingenommen?
+    </label>
+
+    <div id="pain-medication-fields" style="display:none;">
+      <input type="text" id="pain-med-name" placeholder="Name">
+      <input type="text" id="pain-med-dose" placeholder="Dosierung">
+      <input type="time" id="pain-med-time">
+    </div>
+
+    <button id="pain-save-btn">Speichern</button>
+    <button id="pain-export-btn">Exportieren für Arzt</button>
+  </div>
+
+  <!-- Übersicht der Einträge -->
+  <div id="pain-log" class="health-card">
+    <h3>Schmerztagebuch</h3>
+    <div id="pain-entries"></div>
+  </div>
+</div>
+  
 <!-- SETTINGS SCREEN -->
 <div class="screen" id="settings-screen">
   <h2>Einstellungen</h2>
