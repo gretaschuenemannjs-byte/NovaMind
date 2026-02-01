@@ -29,90 +29,61 @@
   <div class="home-cards" id="home-cards"></div>
 </div>
 
-<!-- SETTINGS SCREEN -->
-<div class="screen" id="settings-screen">
-  <h2>Einstellungen</h2>
-  <div class="settings-buttons">
-    <label for="font-select">Schriftart auswählen:</label>
-    <select id="font-select">
-      <option value="Century Gothic" selected>Century Gothic</option>
-      <option value="Arial">Arial</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Poppins">Poppins</option>
-    </select>
-    <button id="logout-btn">Logout</button>
-  </div>
-</div>
-
 <!-- HEALTH SCREEN -->
 <div class="screen" id="health-screen">
   <h2>Gesundheit</h2>
   <div class="health-container">
-    <div class="health-entry">
-      <div class="entry-row">
+    <div class="health-input">
+      <div class="input-row">
         <label>Datum:</label>
         <input type="date" id="health-date">
         <label>Uhrzeit:</label>
         <input type="time" id="health-time">
       </div>
-
-      <div class="entry-row">
+      <div class="input-row">
         <label>Schmerzstärke:</label>
-        <input type="range" id="pain-slider" min="1" max="10" value="1">
-        <span id="pain-value">1</span>
+        <input type="range" id="pain-level" min="1" max="10" value="5">
+        <span id="pain-value">5</span>
       </div>
-
-      <div class="entry-row">
+      <div class="input-row">
         <label>Schmerztyp:</label>
         <select id="pain-type">
-          <option value="">Keine</option>
           <option value="Migräne">Migräne</option>
-          <option value="Spannungskopfschmerzen">Spannungskopfschmerzen</option>
+          <option value="Spannungskopfschmerz">Spannungskopfschmerz</option>
+          <option value="Clusterkopfschmerz">Clusterkopfschmerz</option>
           <option value="Sonstige">Sonstige</option>
         </select>
-        <input type="text" id="pain-other" placeholder="Sonstige Schmerzen" style="display:none;">
+        <input type="text" id="pain-other" placeholder="Wenn Sonstige">
       </div>
-
-      <div class="entry-row">
+      <div class="input-row">
         <label>Medikamente:</label>
-        <select multiple id="medications">
+        <select multiple id="meds">
           <option value="Triptane">Triptane</option>
           <option value="Paracetamol">Paracetamol</option>
           <option value="Ibuprofen">Ibuprofen</option>
-          <option value="Keine">Keine</option>
         </select>
-        <input type="text" id="medication-other" placeholder="Weitere Medikamente">
+        <input type="text" id="med-other" placeholder="Weitere Medikamente">
       </div>
-
-      <div class="entry-buttons">
+      <div class="input-row">
         <button id="save-health">Speichern</button>
-        <button id="delete-health">Löschen</button>
-        <button id="export-health">Exportieren (PDF)</button>
+        <button id="export-health">Exportieren</button>
       </div>
     </div>
-
-    <div class="health-calendar" id="health-calendar">
-      <!-- Hier wird der Kalender angezeigt -->
-    </div>
-
-    <div class="health-supplements">
-      <h3>Supplements & Erinnerungen</h3>
-      <div class="supplement-entry">
-        <input type="text" id="supplement-name" placeholder="Supplementname">
-        <input type="time" id="supplement-time">
-        <button id="add-supplement">Hinzufügen</button>
-      </div>
-      <div id="supplement-list"></div>
-    </div>
+    <div class="health-calendar" id="health-calendar"></div>
   </div>
 </div>
 
 <!-- PLACEHOLDER SCREENS -->
-<div class="screen" id="notes-screen"></div>
-<div class="screen" id="todos-screen"></div>
-<div class="screen" id="routines-screen"></div>
-<div class="screen" id="calendar-screen"></div>
-<div class="screen" id="profile-screen"></div>
+<div class="screen" id="notes-screen"><h2>Notizen</h2></div>
+<div class="screen" id="todos-screen"><h2>ToDos</h2></div>
+<div class="screen" id="routines-screen"><h2>Routinen</h2></div>
+<div class="screen" id="calendar-screen"><h2>Kalender</h2></div>
+<div class="screen" id="profile-screen">
+  <h2>Persönliches</h2>
+  <div class="settings-buttons">
+    <button id="logout-btn">Logout</button>
+  </div>
+</div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
@@ -135,7 +106,7 @@
       <path d="M12 6v6l4 2"/>
     </svg>
   </button>
-  <button class="nav-btn" data-target="home-screen" title="Home" class="active">
+  <button class="nav-btn active" data-target="home-screen" title="Home">
     <svg viewBox="0 0 24 24" width="28" height="28" stroke="#fff" fill="none" stroke-width="2">
       <path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
     </svg>
@@ -148,7 +119,7 @@
   </button>
   <button class="nav-btn" data-target="health-screen" title="Gesundheit">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M12 21c-6-6-10-10-10-14 0-4 4-8 10-2 6-6 10-2 10 2 0 4-4 8-10 14z"/>
+      <path d="M12 21s-6-4.35-10-10 4-10 10-4 10 4 10 10-6 10-10 10z"/>
     </svg>
   </button>
   <button class="nav-btn" data-target="profile-screen" title="Profil">
