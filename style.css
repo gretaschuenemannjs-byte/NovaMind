@@ -4,12 +4,9 @@
   --accent-color: rgba(50,160,100,0.85);
   --checked-color: #aaa;
   --calendar-icon-active: #32a064;
-  --health-bg: rgba(255,255,255,0.12);
-  --health-text: #fff;
-  --health-input-bg: rgba(255,255,255,0.2);
+  --health-card-bg: rgba(255,255,255,0.15);
 }
 
-/* GLOBAL */
 html, body {
   height: 100%;
   margin: 0;
@@ -18,298 +15,73 @@ html, body {
   background: url('login-background.png') no-repeat center center/cover;
   box-sizing: border-box;
   color: #fff;
+  overflow-x: hidden;
 }
 
 /* LOGIN SCREEN */
-#login-screen {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
-  padding-top: 80px;
-}
-.login-form {
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  padding: 28px 24px;
-  border-radius: 20px;
-  text-align: center;
-  width: 85%;
-  max-width: 340px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.25);
-}
-.login-logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-bottom: 24px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-  border: 2px solid rgba(255,255,255,0.4);
-}
-.login-form input {
-  width: 90%;
-  margin: 12px auto;
-  display: block;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(255,255,255,0.2);
-  color: #fff;
-  font-size: 16px;
-}
-.login-form input::placeholder {
-  color: #fff;
-}
-.button-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 16px;
-}
-.button-row button {
-  flex: 1;
-  background: var(--login-color);
-  border: none;
-  border-radius: 12px;
-  padding: 12px;
-  font-size: 16px;
-  cursor: pointer;
-  color: #fff;
-  transition: background 0.3s ease;
-}
-.button-row button:hover {
-  background: #16322f;
-}
+#login-screen { display: flex; align-items: flex-start; justify-content: center; height: 100%; width: 100%; padding-top: 80px; }
+.login-form { background: var(--glass-bg); backdrop-filter: blur(14px); padding: 28px 24px; border-radius: 20px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
+.login-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); border: 2px solid rgba(255,255,255,0.4); }
+.login-form input { width: 90%; margin: 12px auto; display: block; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: #fff; font-size: 16px; }
+.login-form input::placeholder { color: #fff; }
+.button-row { display: flex; gap: 10px; margin-top: 16px; }
+.button-row button { flex: 1; background: var(--login-color); border: none; border-radius: 12px; padding: 12px; font-size: 16px; cursor: pointer; color: #fff; transition: background 0.3s ease; }
+.button-row button:hover { background: #16322f; }
 
 /* SCREENS */
-.screen {
-  display: none;
-  opacity: 0;
-  padding: 16px;
-}
-.screen.active {
-  display: block;
-  opacity: 1;
-}
+.screen { display: none; opacity: 0; padding: 16px; }
+.screen.active { display: block; opacity: 1; }
 
 /* HOME SCREEN */
-.home-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.home-title h2 {
-  margin: 0;
-  font-weight: normal;
-}
-.home-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  justify-content: center;
-}
-.home-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  border-radius: 18px;
-  padding: 14px 16px;
-  cursor: grab;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  flex: 1 1 260px;
-  min-width: 240px;
-  max-width: 360px;
-  position: relative;
-}
-.home-card:active {
-  cursor: grabbing;
-}
-.card-title {
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-.card-content {
-  font-size: 14px;
-}
-.card-task {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 4px 0;
-}
-.card-task input[type="checkbox"] {
-  transform: scale(1.2);
-  cursor: pointer;
-}
-.card-task.completed label {
-  text-decoration: line-through;
-  color: var(--checked-color);
-}
-.card-task.completed input[type="checkbox"] {
-  accent-color: var(--checked-color);
-}
-.motivation-card {
-  text-align: center;
-  font-style: italic;
-  font-size: 16px;
-}
+.home-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.home-title h2 { margin: 0; font-weight: normal; }
+.home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
+.home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
+.home-card:active { cursor: grabbing; }
+
+.card-title { font-weight: bold; margin-bottom: 8px; }
+.card-content { font-size: 14px; }
+
+.card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+.card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
+.card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
+.card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
+
+/* MOTIVATION CARD */
+.motivation-card { text-align: center; font-style: italic; font-size: 16px; }
 
 /* CALENDAR VIEW ICONS */
-.calendar-view-icons {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  display: flex;
-  gap: 6px;
-}
-.calendar-view-icons button {
-  background: rgba(255,255,255,0.2);
-  border: none;
-  border-radius: 6px;
-  padding: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.calendar-view-icons button.active {
-  background: var(--calendar-icon-active);
-}
+.calendar-view-icons { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
+.calendar-view-icons button { background: rgba(255,255,255,0.2); border: none; border-radius: 6px; padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.calendar-view-icons button.active { background: var(--calendar-icon-active); }
 
 /* BOTTOM NAV */
-.bottom-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding: 8px 6px;
-  background: rgba(0,0,0,0.25);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-.nav-btn {
-  background: var(--glass-bg);
-  border-radius: 12px;
-  padding: 10px;
-  cursor: pointer;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  margin: 0 2px;
-}
-.nav-btn svg {
-  stroke: #fff;
-}
-.nav-btn.active {
-  background: var(--accent-color);
-}
+.bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.nav-btn { background: var(--glass-bg); border-radius: 12px; padding: 10px; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; flex: 1; margin: 0 2px; }
+.nav-btn svg { stroke: #fff; }
+.nav-btn.active { background: var(--accent-color); }
 
 /* SETTINGS BUTTONS */
-.settings-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 20px;
-}
-.settings-buttons button, .settings-buttons select {
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: var(--accent-color);
-  color: #fff;
-  cursor: pointer;
-  font-size: 16px;
-}
-.settings-buttons select {
-  appearance: none;
-}
+.settings-buttons { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
+.settings-buttons button, .settings-buttons select { padding: 12px; border-radius: 12px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; font-size: 16px; }
+.settings-buttons select { appearance: none; }
 
 /* HEALTH SCREEN */
-.health-container {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.health-entry {
-  background: var(--health-bg);
-  padding: 16px;
-  border-radius: 18px;
-  backdrop-filter: blur(14px);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.entry-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-.entry-row label {
-  width: 120px;
-}
-.entry-row input, .entry-row select {
-  padding: 6px 10px;
-  border-radius: 10px;
-  border: none;
-  background: var(--health-input-bg);
-  color: var(--health-text);
-}
-.entry-row input::placeholder {
-  color: #fff;
-}
-.entry-row select option {
-  color: #000;
-}
-.entry-buttons {
-  display: flex;
-  gap: 10px;
-}
-.entry-buttons button {
-  flex: 1;
-  padding: 10px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  background: var(--accent-color);
-  color: #fff;
-}
-.health-calendar {
-  background: var(--health-bg);
-  border-radius: 18px;
-  padding: 10px;
-  min-height: 200px;
-}
-.health-supplements {
-  background: var(--health-bg);
-  border-radius: 18px;
-  padding: 12px;
-}
-#supplement-list {
-  margin-top: 10px;
-}
+.health-container { display: flex; flex-wrap: wrap; gap: 16px; }
+.health-input { background: var(--health-card-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 16px; flex: 1 1 300px; min-width: 280px; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
+.health-input .input-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.health-input input, .health-input select { padding: 8px; border-radius: 10px; border: none; background: rgba(0,0,0,0.3); color: #fff; font-size: 14px; }
+.health-input select[multiple] { height: 60px; }
+.health-input button { padding: 10px; border-radius: 12px; background: var(--accent-color); border: none; color: #fff; cursor: pointer; flex: 1; }
+
+/* Health Calendar */
+.health-calendar { flex: 2 1 500px; min-width: 300px; background: var(--health-card-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 16px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; }
 
 /* RESPONSIVE */
 @media (max-width: 480px) {
-  .home-card {
-    flex: 1 1 90%;
-    min-width: 90%;
-  }
-  #login-screen {
-    padding-top: 60px;
-  }
-  .health-container {
-    gap: 10px;
-  }
-  .entry-row {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .entry-row label {
-    width: auto;
-  }
+  .home-card { flex: 1 1 90%; min-width: 90%; }
+  #login-screen { padding-top: 60px; }
+  .health-container { flex-direction: column; }
+  .health-calendar { flex: 1 1 100%; }
 }
