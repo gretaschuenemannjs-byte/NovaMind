@@ -1,10 +1,7 @@
-// =======================
-// FIREBASE INITIALISIERUNG
-// =======================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
+// Firebase-Konfiguration
 const firebaseConfig = {
   apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
   authDomain: "novamind-gs.firebaseapp.com",
@@ -15,197 +12,188 @@ const firebaseConfig = {
   appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getDatabase(app);
 
-// =======================
-// ELEMENTE
-// =======================
+// Screens & Elemente
 const loginScreen = document.getElementById("login-screen");
 const homeScreen = document.getElementById("home-screen");
 const healthScreen = document.getElementById("health-screen");
+const profileScreen = document.getElementById("profile-screen");
 const loginBtn = document.getElementById("login-btn");
 const registerBtn = document.getElementById("register-btn");
 const logoutBtn = document.getElementById("logout-btn");
-
-// =======================
-// LOGIN / REGISTER
-// =======================
-loginBtn.addEventListener("click", async () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-  } catch(e) {
-    alert(e.message);
-  }
-});
-
-registerBtn.addEventListener("click", async () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  try {
-    await createUserWithEmailAndPassword(auth, email, password);
-  } catch(e) {
-    alert(e.message);
-  }
-});
-
-logoutBtn.addEventListener("click", () => {
-  signOut(auth);
-});
-
-// Auth-State Listener
-let isLoggedIn = false;
-onAuthStateChanged(auth, user => {
-  isLoggedIn = !!user;
-  updateUI();
-});
-
-// =======================
-// HOME SCREEN (unverändert)
-// =======================
 const homeCardsContainer = document.getElementById("home-cards");
+const currentDateEl = document.getElementById("current-date");
+const navButtons = document.querySelectorAll(".nav-btn");
+
+// Health Elements
+const healthDate = document.getElementById("health-date");
+const healthTime = document.getElementById("health-time");
+const painLevel = document.getElementById("pain-level");
+const painValue = document.getElementById("pain-value");
+const painType = document.getElementById("pain-type");
+const painOther = document.getElementById("pain-other");
+const meds = document.getElementById("meds");
+const medOther = document.getElementById("med-other");
+const saveHealth = document.getElementById("save-health");
+const exportHealth = document.getElementById("export-health");
+const healthCalendar = document.getElementById("health-calendar");
+
+let isLoggedIn = false;
+
+// Home-Kacheln Daten
 let homeCardsData = [
-  { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }]},
-  { type: "routines", title: "Routinen", tasks: [{ text: "Meditation", done: false }]},
-  { type: "calendar", title: "Kalender", view: "day", tasks: []},
+  { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }, { text: "Meeting vorbereiten", done: false }]},
+  { type: "routines", title: "Routinen", tasks: [{ text: "Meditation", done: false }, { text: "Workout", done: false }]},
+  { type: "calendar", title: "Kalender", view: "day", tasks: [
+      { text: "10:00 Projektbesprechung", done: false },
+      { text: "15:30 Arzttermin", done: false }
+    ]},
   { type: "motivation", title: "Motivation", quote: "Du schaffst alles, was du dir vornimmst!"}
 ];
 
+// Health Data
+let healthEntries = JSON.parse(localStorage.getItem("healthEntries")) || [];
+
+// Datum Home-Screen
+function updateDate() {
+  const now = new Date();
+  const options = { weekday:"short", day:"numeric", month:"short", year:"numeric"};
+  currentDateEl.textContent = now.toLocaleDateString("de-DE", options);
+}
+
+// Render Home Cards
 function renderHomeCards() {
   homeCardsContainer.innerHTML = "";
   homeCardsData.forEach((card, index) => {
     const div = document.createElement("div");
     div.classList.add("home-card");
     div.dataset.index = index;
-
     const title = document.createElement("div");
     title.classList.add("card-title");
     title.textContent = card.title;
     div.appendChild(title);
-
     const content = document.createElement("div");
     content.classList.add("card-content");
-    content.textContent = card.quote || "";
+
+    if(card.type === "motivation") content.textContent = card.quote;
+    else if(card.tasks) {
+      card.tasks.forEach(task=>{
+        const taskDiv = document.createElement("div");
+        taskDiv.classList.add("card-task");
+        if(task.done) taskDiv.classList.add("completed");
+        const checkbox = document.createElement("input"); checkbox.type="checkbox"; checkbox.checked=task.done;
+        checkbox.addEventListener("change", ()=>{task.done=checkbox.checked; taskDiv.classList.toggle("completed", task.done)});
+        const label = document.createElement("label"); label.textContent=task.text;
+        taskDiv.appendChild(checkbox); taskDiv.appendChild(label);
+        content.appendChild(taskDiv);
+      });
+    }
 
     div.appendChild(content);
     homeCardsContainer.appendChild(div);
   });
 }
 
-// =======================
-// HEALTH SCREEN
-// =======================
-const healthContainer = document.getElementById("health-container");
-const healthCalendar = document.getElementById("health-calendar");
-
-const painTypes = ["Migräne", "Spannungskopfschmerzen", "Clusterkopfschmerzen", "Sonstige"];
-const meds = ["Triptane","Paracetamol","Ibuprofen"];
-
-let healthData = {};
-if(localStorage.getItem("healthData")) healthData = JSON.parse(localStorage.getItem("healthData"));
-
-function createHealthEntry() {
-  const now = new Date();
-  const dateStr = now.toISOString().split("T")[0];
-  const timeStr = now.toTimeString().slice(0,5);
-
-  const entryDiv = document.createElement("div");
-  entryDiv.classList.add("health-entry");
-
-  // Datum & Uhrzeit nebeneinander
-  const dateRow = document.createElement("div");
-  dateRow.classList.add("entry-row");
-  dateRow.innerHTML = `<label>Datum</label><input type="date" value="${dateStr}">` +
-                      `<label>Uhrzeit</label><input type="time" value="${timeStr}">`;
-  entryDiv.appendChild(dateRow);
-
-  // Schmerzstärke
-  const severityRow = document.createElement("div");
-  severityRow.classList.add("entry-row");
-  const slider = document.createElement("input");
-  slider.type="range"; slider.min=1; slider.max=10; slider.value=5;
-  const sliderVal = document.createElement("span"); sliderVal.textContent=slider.value;
-  slider.addEventListener("input",()=>sliderVal.textContent=slider.value);
-  severityRow.innerHTML="<label>Schmerzstärke</label>";
-  severityRow.appendChild(slider); severityRow.appendChild(sliderVal);
-  entryDiv.appendChild(severityRow);
-
-  // Schmerztyp
-  const typeRow = document.createElement("div");
-  typeRow.classList.add("entry-row");
-  const selectType = document.createElement("select");
-  painTypes.forEach(pt=>{ const opt=document.createElement("option"); opt.value=pt; opt.textContent=pt; selectType.appendChild(opt); });
-  const otherInput = document.createElement("input");
-  otherInput.type="text"; otherInput.placeholder="Sonstiger Schmerz";
-  typeRow.innerHTML="<label>Schmerzart</label>"; typeRow.appendChild(selectType); typeRow.appendChild(otherInput);
-  entryDiv.appendChild(typeRow);
-
-  // Medikamente
-  const medsRow = document.createElement("div");
-  medsRow.classList.add("entry-row");
-  medsRow.innerHTML="<label>Medikamente</label>";
-  meds.forEach(m=>{
-    const btn = document.createElement("button");
-    btn.type="button"; btn.textContent=m;
-    btn.addEventListener("click",()=>btn.classList.toggle("selected"));
-    medsRow.appendChild(btn);
+// Navigation
+navButtons.forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    const target = document.getElementById(btn.dataset.target);
+    if(target) target.classList.add("active");
+    navButtons.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
   });
-  const otherMed = document.createElement("input"); otherMed.placeholder="Andere Medikamente";
-  medsRow.appendChild(otherMed);
-  entryDiv.appendChild(medsRow);
+});
 
-  // Buttons speichern/löschen
-  const btnRow = document.createElement("div");
-  btnRow.classList.add("entry-buttons");
-  const saveBtn = document.createElement("button"); saveBtn.textContent="Speichern";
-  const deleteBtn = document.createElement("button"); deleteBtn.textContent="Löschen";
-  saveBtn.addEventListener("click",()=>{
-    const dateVal = dateRow.querySelector("input[type=date]").value;
-    const timeVal = dateRow.querySelector("input[type=time]").value;
-    const severityVal = parseInt(slider.value);
-    let typeVal = selectType.value;
-    if(typeVal==="Sonstige" && otherInput.value) typeVal=otherInput.value;
-    const medVals = Array.from(medsRow.querySelectorAll("button.selected")).map(b=>b.textContent);
-    if(otherMed.value) medVals.push(otherMed.value);
-    if(!healthData[dateVal]) healthData[dateVal]=[];
-    healthData[dateVal].push({time:timeVal,type:typeVal,severity:severityVal,meds:medVals});
-    localStorage.setItem("healthData",JSON.stringify(healthData));
-    renderHealthCalendar();
-  });
-  deleteBtn.addEventListener("click",()=>entryDiv.remove());
-  btnRow.appendChild(saveBtn); btnRow.appendChild(deleteBtn);
-  entryDiv.appendChild(btnRow);
+// Health Slider Update
+painLevel.addEventListener("input", ()=>{ painValue.textContent = painLevel.value; });
 
-  healthContainer.prepend(entryDiv);
-}
+// Save Health Entry
+saveHealth.addEventListener("click", ()=>{
+  const entry = {
+    date: healthDate.value,
+    time: healthTime.value,
+    pain: painType.value==="Sonstige"? painOther.value : painType.value,
+    level: painLevel.value,
+    meds: Array.from(meds.selectedOptions).map(o=>o.value).concat(medOther.value?medOther.value:[])
+  };
+  healthEntries.push(entry);
+  localStorage.setItem("healthEntries", JSON.stringify(healthEntries));
+  renderHealthCalendar();
+});
 
-// Health Kalender
-function renderHealthCalendar() {
+// Render Health Calendar
+function renderHealthCalendar(){
   healthCalendar.innerHTML="";
-  Object.keys(healthData).sort().forEach(date=>{
-    const dayDiv = document.createElement("div");
-    dayDiv.textContent=date;
-    const severitySum = healthData[date].reduce((a,e)=>a+e.severity/10,0);
-    dayDiv.style.background=`rgba(255,0,0,${Math.min(1,severitySum)})`;
-    dayDiv.style.margin="2px"; dayDiv.style.padding="6px"; dayDiv.style.borderRadius="8px";
-    dayDiv.addEventListener("click",()=>alert(JSON.stringify(healthData[date],null,2)));
-    healthCalendar.appendChild(dayDiv);
+  healthEntries.forEach((e, i)=>{
+    const div=document.createElement("div");
+    div.classList.add("home-card");
+    div.style.background="rgba(255,255,255,0.15)";
+    div.style.cursor="default";
+    div.innerHTML=`<strong>${e.date} ${e.time}</strong><br>Typ: ${e.pain}<br>Stärke: ${e.level}<br>Medikamente: ${e.meds.join(", ")}<br><button data-index="${i}" class="delete-health">Löschen</button>`;
+    healthCalendar.appendChild(div);
+  });
+  document.querySelectorAll(".delete-health").forEach(btn=>{
+    btn.addEventListener("click",(ev)=>{
+      const idx = ev.target.dataset.index;
+      healthEntries.splice(idx,1);
+      localStorage.setItem("healthEntries", JSON.stringify(healthEntries));
+      renderHealthCalendar();
+    });
   });
 }
 
-// =======================
-// UI UPDATE
-// =======================
-function updateUI() {
+// Initial Health-Date & Time
+const now = new Date();
+healthDate.value = now.toISOString().split("T")[0];
+healthTime.value = now.toTimeString().split(" ")[0].substring(0,5);
+renderHealthCalendar();
+
+// PDF Export
+exportHealth.addEventListener("click", ()=>{
+  const doc = new jsPDF();
+  healthEntries.forEach((e, i)=>{
+    doc.text(`${e.date} ${e.time} | Typ: ${e.pain} | Stärke: ${e.level} | Meds: ${e.meds.join(", ")}`,10,10+i*10);
+  });
+  doc.save("health-export.pdf");
+});
+
+// Login/Register
+loginBtn.addEventListener("click", ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  signInWithEmailAndPassword(auth,email,password)
+    .catch(err=>alert(err.message));
+});
+
+registerBtn.addEventListener("click", ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  createUserWithEmailAndPassword(auth,email,password)
+    .catch(err=>alert(err.message));
+});
+
+// Logout
+logoutBtn.addEventListener("click", ()=>{ signOut(auth); });
+
+// Auth State
+onAuthStateChanged(auth,user=>{
+  isLoggedIn = !!user;
+  updateUI();
+});
+
+// Update UI
+function updateUI(){
   if(isLoggedIn){
     loginScreen.style.display="none";
-    document.querySelector(".bottom-nav").style.display="flex";
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     homeScreen.classList.add("active");
+    document.querySelector(".bottom-nav").style.display="flex";
     renderHomeCards();
-    renderHealthCalendar();
+    updateDate();
   } else {
     loginScreen.style.display="flex";
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
@@ -213,7 +201,5 @@ function updateUI() {
   }
 }
 
-// =======================
-// INITIAL
-// =======================
+// Initial Home UI
 updateUI();
