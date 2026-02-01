@@ -114,3 +114,21 @@ document.getElementById('save-pain-entry').addEventListener('click', ()=>{
   console.log(entry);
   alert('Eintrag gespeichert (siehe Konsole)');
 });
+const prevBtn = document.createElement('button');
+prevBtn.textContent = '←';
+const nextBtn = document.createElement('button');
+nextBtn.textContent = '→';
+calendarCard.prepend(prevBtn);
+calendarCard.appendChild(nextBtn);
+
+prevBtn.addEventListener('click', ()=>{
+  currentMonth--;
+  if(currentMonth<0){ currentMonth=11; currentYear--; }
+  loadCalendar(currentMonth, currentYear);
+});
+
+nextBtn.addEventListener('click', ()=>{
+  currentMonth++;
+  if(currentMonth>11){ currentMonth=0; currentYear++; }
+  loadCalendar(currentMonth, currentYear);
+});
