@@ -1,72 +1,59 @@
-:root {
-  --login-color: #1e3d3b;
-  --glass-bg: rgba(255,255,255,0.18);
-  --accent-color: rgba(50,160,100,0.85);
-  --checked-color: #aaa;
-  --calendar-icon-active: #32a064;
-}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getDatabase } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  font-family: 'Century Gothic', sans-serif;
-  background: url('login-background.png') no-repeat center center/cover;
-  box-sizing: border-box;
-  color: #fff;
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+  authDomain: "novamind-gs.firebaseapp.com",
+  databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "novamind-gs",
+  storageBucket: "novamind-gs.firebasestorage.app",
+  messagingSenderId: "278309634253",
+  appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+};
 
-/* LOGIN SCREEN */
-#login-screen { display: flex; align-items: flex-start; justify-content: center; height: 100%; width: 100%; padding-top: 80px; }
-.login-form { background: var(--glass-bg); backdrop-filter: blur(14px); padding: 28px 24px; border-radius: 20px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
-.login-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); border: 2px solid rgba(255,255,255,0.4); }
-.login-form input { width: 90%; margin: 12px auto; display: block; padding: 12px; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: #fff; font-size: 16px; }
-.login-form input::placeholder { color: #fff; }
-.button-row { display: flex; gap: 10px; margin-top: 16px; }
-.button-row button { flex: 1; background: var(--login-color); border: none; border-radius: 12px; padding: 12px; font-size: 16px; cursor: pointer; color: #fff; transition: background 0.3s ease; }
-.button-row button:hover { background: #16322f; }
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getDatabase();
 
-/* SCREENS */
-.screen { display: none; opacity: 0; padding: 16px; }
-.screen.active { display: block; opacity: 1; }
+const loginScreen = document.getElementById("login-screen");
+const homeScreen = document.getElementById("home-screen");
+const settingsScreen = document.getElementById("settings-screen");
+const healthScreen = document.getElementById("health-screen");
+const loginBtn = document.getElementById("login-btn");
+const registerBtn = document.getElementById("register-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const navButtons = document.querySelectorAll(".nav-btn");
 
-/* HOME SCREEN */
-.home-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.home-title h2 { margin: 0; font-weight: normal; }
-.home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+loginBtn.addEventListener("click", ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  signInWithEmailAndPassword(auth,email,password)
+    .then(()=>{ loginScreen.style.display="none"; homeScreen.classList.add("active"); })
+    .catch(err=>{ alert(err.message); });
+});
 
-.home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
-.home-card:active { cursor: grabbing; }
+registerBtn.addEventListener("click", ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  createUserWithEmailAndPassword(auth,email,password)
+    .then(()=>{ loginScreen.style.display="none"; homeScreen.classList.add("active"); })
+    .catch(err=>{ alert(err.message); });
+});
 
-.card-title { font-weight: bold; margin-bottom: 8px; }
-.card-content { font-size: 14px; }
+logoutBtn.addEventListener("click", ()=>{ signOut(auth).then(()=>{ location.reload(); }); });
 
-.card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
-.card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
-.card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
-.card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
+onAuthStateChanged(auth,(user)=>{
+  if(user){ loginScreen.style.display="none"; homeScreen.classList.add("active"); }
+  else { loginScreen.style.display="flex"; document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); }
+});
 
-/* MOTIVATION CARD */
-.motivation-card { text-align: center; font-style: italic; font-size: 16px; }
-
-/* CALENDAR VIEW ICONS */
-.calendar-view-icons { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
-.calendar-view-icons button { background: rgba(255,255,255,0.2); border: none; border-radius: 6px; padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.calendar-view-icons button.active { background: var(--calendar-icon-active); }
-
-/* BOTTOM NAV */
-.bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
-.nav-btn { background: var(--glass-bg); border-radius: 12px; padding: 10px; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; flex: 1; margin: 0 2px; }
-.nav-btn svg { stroke: #fff; }
-.nav-btn.active { background: var(--accent-color); }
-
-/* SETTINGS BUTTONS */
-.settings-buttons { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
-.settings-buttons button, .settings-buttons select { padding: 12px; border-radius: 12px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; font-size: 16px; }
-.settings-buttons select { appearance: none; }
-
-/* RESPONSIVE */
-@media (max-width: 480px) {
-  .home-card { flex: 1 1 90%; min-width: 90%; }
-  #login-screen { padding-top: 60px; }
-}
+// NAVIGATION
+navButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+    document.getElementById(btn.dataset.target).classList.add("active");
+    btn.classList.add("active");
+  });
+});
