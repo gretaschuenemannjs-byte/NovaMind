@@ -89,6 +89,20 @@
     </svg>
   </button>
 </div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+    authDomain: "novamind-gs.firebaseapp.com",
+    projectId: "novamind-gs",
+    appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+</script>
 
 <script src="app.js"></script>
 </body>
