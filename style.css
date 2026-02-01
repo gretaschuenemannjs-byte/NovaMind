@@ -16,7 +16,7 @@ html, body {
   color: #fff;
 }
 
-/* LOGIN SCREEN unverändert */
+/* LOGIN SCREEN */
 #login-screen { display: flex; align-items: flex-start; justify-content: center; height: 100%; width: 100%; padding-top: 80px; }
 .login-form { background: var(--glass-bg); backdrop-filter: blur(14px); padding: 28px 24px; border-radius: 20px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
 .login-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); border: 2px solid rgba(255,255,255,0.4); }
@@ -35,24 +35,24 @@ html, body {
 .home-title h2 { margin: 0; font-weight: normal; }
 .home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 
-.home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
+.home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; margin-bottom: 16px;}
 .home-card:active { cursor: grabbing; }
 
 .card-title { font-weight: bold; margin-bottom: 8px; }
 .card-content { font-size: 14px; }
 
-.card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
-.card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
-.card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
-.card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
+/* Schmerz/Kalender-Styles */
+#pain-meds-list { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+#calendar-entries { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
+.calendar-cell { min-height: 60px; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 4px; font-size: 12px; position: relative; }
+.calendar-cell .entry { display: block; padding: 2px 4px; border-radius: 6px; font-size: 11px; margin-bottom: 2px; color: #fff; }
+.migraine { background-color: #e74c3c; }
+.tension { background-color: #f1c40f; }
+.other { background-color: #3498db; }
+.medication { background-color: #2ecc71; }
 
-/* MOTIVATION CARD */
-.motivation-card { text-align: center; font-style: italic; font-size: 16px; }
-
-/* CALENDAR VIEW ICONS */
-.calendar-view-icons { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
-.calendar-view-icons button { background: rgba(255,255,255,0.2); border: none; border-radius: 6px; padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.calendar-view-icons button.active { background: var(--calendar-icon-active); }
+/* Supplement Liste */
+#supplement-list div { display: flex; justify-content: space-between; padding: 6px; margin: 4px 0; background: rgba(255,255,255,0.2); border-radius: 8px; }
 
 /* BOTTOM NAV */
 .bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
@@ -64,25 +64,6 @@ html, body {
 .settings-buttons { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
 .settings-buttons button, .settings-buttons select { padding: 12px; border-radius: 12px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; font-size: 16px; }
 .settings-buttons select { appearance: none; }
-
-.health-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-#pain-medication-fields input {
-  display: block;
-  width: 90%;
-  margin: 6px 0;
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-  background: rgba(255,255,255,0.2);
-  color: #fff;
-}
 
 /* RESPONSIVE */
 @media (max-width: 480px) {
