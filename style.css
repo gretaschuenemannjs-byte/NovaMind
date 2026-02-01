@@ -38,11 +38,22 @@ html, body {
 .home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
 .home-card:active { cursor: grabbing; }
 
+/* --- Health-Screen Kacheln --- */
+#health-screen {
+  display: block;
+  height: 100%;
+  background: url('login-background.png') no-repeat center center/cover;
+  background-attachment: fixed; /* fixiert für Mobile/Desktop */
+  background-size: cover;
+}
+
 .health-dashboard {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
+  background: transparent;
+  padding-bottom: 20px; /* Abstand nach unten */
 }
 
 .health-card {
