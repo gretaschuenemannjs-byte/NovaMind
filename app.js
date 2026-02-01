@@ -197,6 +197,93 @@ logoutBtn.addEventListener("click", () => {
   auth.signOut();
 });
 
+// --- Schmerztracking Health Screen ---
+const painEntries = []; // lokal, später Firebase pro User speichern
+
+const intensityInput = document.getElementById("pain-intensity");
+const intensityLabel = document.getElementById("pain-intensity-label");
+const typeSelect = document.getElementById("pain-type");
+const notesInput = document.getElementById("pain-notes");
+const medToggle = document.getElementById("pain-medication-toggle");
+const medFields = document.getElementById("pain-medication-fields");
+const medName = document.getElementById("pain-med-name");
+const medDose = document.getElementById("pain-med-dose");
+const medTime = document.getElementById("pain-med-time");
+const saveBtn = document.getElementById("pain-save-btn");
+const exportBtn = document.getElementById("pain-export-btn");
+const entriesContainer = document.getElementById("pain-entries");
+
+// Slider Label aktualisieren
+intensityInput.addEventListener("input", () => {
+  intensityLabel.textContent = intensityInput.value;
+});
+
+// Medikamentenfelder ein-/ausblenden
+medToggle.addEventListener("change", () => {
+  medFields.style.display = medToggle.checked ? "block" : "none";
+});
+
+// Speichern
+saveBtn.addEventListener("click", () => {
+  const entry = {
+    date: new Date().toISOString().split("T")[0],
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    intensity: parseInt(intensityInput.value),
+    type: typeSelect.value,
+    notes: notesInput.value,
+    medication: medToggle.checked ? [{ name: medName.value, dose: medDose.value, time: medTime.value }] : []
+  };
+
+  painEntries.push(entry);
+  renderPainEntries();
+
+  // Reset Form
+  intensityInput.value = 5;
+  intensityLabel.textContent = 5;
+  notesInput.value = "";
+  medToggle.checked = false;
+  medFields.style.display = "none";
+});
+
+// Anzeigen
+function renderPainEntries() {
+  entriesContainer.innerHTML = "";
+  painEntries.slice().reverse().forEach(entry => {
+    const div = document.createElement("div");
+    div.classList.add("pain-entry");
+    div.innerHTML = `
+      <strong>${entry.date} ${entry.time}</strong> - ${entry.type} - Stärke: ${entry.intensity}<br>
+      ${entry.notes ? entry.notes + "<br>" : ""}
+      ${entry.medication.length ? "Medikament: " + entry.medication.map(m => `${m.name} ${m.dose} um ${m.time}`).join(", ") : ""}
+    `;
+    entriesContainer.appendChild(div);
+  });
+}
+
+// Export Funktion (CSV)
+exportBtn.addEventListener("click", () => {
+  if(!painEntries.length) return alert("Keine Einträge zum Exportieren");
+
+  let csv = "Datum,Uhrzeit,Schmerzstärke,Typ,Notizen,Medikament,Dosierung,Medikament-Zeit\n";
+  painEntries.forEach(e => {
+    if(e.medication.length){
+      e.medication.forEach(med => {
+        csv += `${e.date},${e.time},${e.intensity},${e.type},"${e.notes}",${med.name},${med.dose},${med.time}\n`;
+      });
+    } else {
+      csv += `${e.date},${e.time},${e.intensity},${e.type},"${e.notes}",,,\n`;
+    }
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `schmerztagebuch_${new Date().toISOString().split("T")[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
 // Initial
 auth.onAuthStateChanged(user => {
   if(user) {
