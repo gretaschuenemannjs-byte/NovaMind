@@ -12,6 +12,8 @@ html, body {
   padding: 0;
   font-family: 'Century Gothic', sans-serif;
   background: url('login-background.png') no-repeat center center/cover;
+  background-attachment: fixed;
+  background-size: cover;
   box-sizing: border-box;
   color: #fff;
 }
@@ -36,24 +38,23 @@ html, body {
 .home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
 
 .home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
-.home-card:active { cursor: grabbing; }
+
+.card-title { font-weight: bold; margin-bottom: 8px; }
+.card-content { font-size: 14px; }
+
+.card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+.card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
+.card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
+.card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
 
 /* --- Health-Screen Kacheln --- */
-#health-screen {
-  display: block;
-  height: 100%;
-  background: url('login-background.png') no-repeat center center/cover;
-  background-attachment: fixed; /* fixiert für Mobile/Desktop */
-  background-size: cover;
-}
-
 .health-dashboard {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   justify-content: center;
   background: transparent;
-  padding-bottom: 20px; /* Abstand nach unten */
+  padding-bottom: 80px;
 }
 
 .health-card {
@@ -75,59 +76,19 @@ html, body {
 .pain-datetime,
 .pain-slider,
 .pain-type,
-.medication-entry {
-  margin-bottom: 12px;
-}
+.medication-entry { margin-bottom: 12px; }
 
-.pain-slider input[type="range"] {
-  width: 100%;
-}
+.pain-slider input[type="range"] { width: 100%; }
 
-.medication-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.medication-list label {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+.medication-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.medication-list label { display: flex; align-items: center; gap: 4px; }
 
 #add-medication-btn,
-#save-pain-entry {
-  background: rgba(50,160,100,0.85);
-  border: none;
-  padding: 10px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-  color: #fff;
-  margin-top: 6px;
-}
+#save-pain-entry { background: var(--accent-color); border: none; padding: 10px 14px; border-radius: 12px; cursor: pointer; color: #fff; margin-top: 6px; }
 
 @media (max-width: 768px) {
-  .health-dashboard {
-    flex-direction: column;
-    align-items: center;
-  }
+  .health-dashboard { flex-direction: column; align-items: center; }
 }
-
-.card-title { font-weight: bold; margin-bottom: 8px; }
-.card-content { font-size: 14px; }
-
-.card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
-.card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
-.card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
-.card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
-
-/* MOTIVATION CARD */
-.motivation-card { text-align: center; font-style: italic; font-size: 16px; }
-
-/* CALENDAR VIEW ICONS */
-.calendar-view-icons { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
-.calendar-view-icons button { background: rgba(255,255,255,0.2); border: none; border-radius: 6px; padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.calendar-view-icons button.active { background: var(--calendar-icon-active); }
 
 /* BOTTOM NAV */
 .bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
