@@ -45,12 +45,56 @@
 </div>
 
 <!-- HEALTH SCREEN -->
+<!-- HEALTH SCREEN -->
 <div class="screen" id="health-screen">
   <h2>Gesundheit</h2>
   <div id="health-content">
-    <p>Health-Funktionen werden später ergänzt</p>
-  </div>
-</div>
+    <div class="health-dashboard">
+
+      <!-- Schmerzeingabe-Kachel -->
+      <div class="health-card" id="pain-entry-card">
+        <h3>Schmerzeingabe</h3>
+        <div class="pain-datetime">
+          <label>Datum:</label>
+          <input type="date" id="pain-date">
+          <label>Uhrzeit:</label>
+          <input type="time" id="pain-time">
+        </div>
+
+        <div class="pain-slider">
+          <label for="pain-level">Schmerzstärke: <span id="pain-level-value">5</span></label>
+          <input type="range" id="pain-level" min="1" max="10" value="5">
+        </div>
+
+        <div class="pain-type">
+          <label>Art des Schmerzes:</label>
+          <select id="pain-type-select">
+            <option value="Migräne">Migräne</option>
+            <option value="Spannungskopfschmerz">Spannungskopfschmerz</option>
+            <option value="Tetra">Tetra</option>
+            <option value="Sonstiges">Sonstiges</option>
+          </select>
+          <input type="text" id="pain-type-other" placeholder="Sonstige Schmerzen">
+        </div>
+
+        <div class="medication-entry">
+          <label>Medikamente:</label>
+          <div class="medication-list">
+            <label><input type="checkbox" value="Ibuprofen"> Ibuprofen</label>
+            <label><input type="checkbox" value="Paracetamol"> Paracetamol</label>
+            <label><input type="checkbox" value="Aspirin"> Aspirin</label>
+          </div>
+          <input type="text" id="medication-other" placeholder="Eigenes Medikament hinzufügen">
+          <button id="add-medication-btn">Hinzufügen</button>
+        </div>
+
+        <button id="save-pain-entry">Eintrag speichern</button>
+      </div>
+
+      <!-- Kalender-Kachel (Platzhalter) -->
+      <div class="health-card" id="calendar-card">
+        <h3>Kalenderübersicht</h3>
+
 
 <!-- PLACEHOLDER SCREENS -->
 <div class="screen" id="notes-screen"></div>
