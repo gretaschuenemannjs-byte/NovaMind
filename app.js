@@ -1,4 +1,4 @@
-// ===== Login, Home, Navigation, Settings =====
+// ==================== LOGIN & AUTH ====================
 const loginScreen = document.getElementById("login-screen");
 const homeScreen = document.getElementById("home-screen");
 const settingsScreen = document.getElementById("settings-screen");
@@ -13,6 +13,7 @@ const navButtons = document.querySelectorAll(".nav-btn");
 
 let isLoggedIn = false;
 
+// ==================== HOME CARDS ====================
 let homeCardsData = [
   { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }, { text: "Meeting vorbereiten", done: false }]},
   { type: "routines", title: "Routinen", tasks: [{ text: "Meditation", done: false }, { text: "Workout", done: false }]},
@@ -31,189 +32,231 @@ function updateDate() {
 
 function renderHomeCards() {
   homeCardsContainer.innerHTML = "";
-  homeCardsData.forEach((card,index)=>{
-    const div=document.createElement("div");
-    div.classList.add("home-card"); div.dataset.index=index;
+  homeCardsData.forEach((card, index) => {
+    const div = document.createElement("div");
+    div.classList.add("home-card");
+    div.dataset.index = index;
 
-    const title=document.createElement("div");
-    title.classList.add("card-title"); title.textContent=card.title;
+    const title = document.createElement("div");
+    title.classList.add("card-title");
+    title.textContent = card.title;
     div.appendChild(title);
 
-    const content=document.createElement("div"); content.classList.add("card-content");
+    const content = document.createElement("div");
+    content.classList.add("card-content");
 
-    if(card.type==="calendar"){
-      const iconBar=document.createElement("div"); iconBar.classList.add("calendar-view-icons");
-      const views=["month","week","day"];
-      views.forEach(v=>{
-        const btn=document.createElement("button");
-        btn.innerHTML=v==="month"?"▦":v==="week"?"▮▮▮▮▮▮▮":"▬▬▬▬▬";
-        btn.classList.toggle("active",card.view===v);
-        btn.addEventListener("click",()=>{card.view=v; renderHomeCards();});
+    if(card.type === "calendar") {
+      const iconBar = document.createElement("div");
+      iconBar.classList.add("calendar-view-icons");
+      const views = ["month", "week", "day"];
+      views.forEach(v => {
+        const btn = document.createElement("button");
+        btn.innerHTML = v==="month"? "▦": v==="week"? "▮▮▮▮▮▮▮":"▬▬▬▬▬";
+        btn.classList.toggle("active", card.view === v);
+        btn.addEventListener("click", ()=>{ card.view=v; renderHomeCards(); });
         iconBar.appendChild(btn);
       });
       div.appendChild(iconBar);
 
-      if(card.view==="day"){
+      if(card.view === "day") {
         for(let i=0;i<24;i++){
-          const hourDiv=document.createElement("div");
-          hourDiv.textContent=`${i}:00 - ${i+1}:00`;
+          const hourDiv = document.createElement("div");
+          hourDiv.textContent = `${i}:00 - ${i+1}:00`;
           content.appendChild(hourDiv);
         }
-      }else if(card.view==="week"){
-        const weekDiv=document.createElement("div"); weekDiv.style.display="flex"; weekDiv.style.gap="2px";
+      } else if(card.view === "week") {
+        const weekDiv = document.createElement("div");
+        weekDiv.style.display = "flex"; weekDiv.style.gap="2px";
         for(let i=0;i<7;i++){
-          const dayCol=document.createElement("div");
+          const dayCol = document.createElement("div");
           dayCol.style.flex="1"; dayCol.style.border="1px solid rgba(255,255,255,0.3)"; dayCol.style.height="80px";
           weekDiv.appendChild(dayCol);
         }
         content.appendChild(weekDiv);
-      }else if(card.view==="month"){
-        const monthDiv=document.createElement("div"); monthDiv.style.display="grid"; monthDiv.style.gridTemplateColumns="repeat(7,1fr)"; monthDiv.style.gap="2px";
+      } else if(card.view === "month") {
+        const monthDiv = document.createElement("div");
+        monthDiv.style.display="grid"; monthDiv.style.gridTemplateColumns="repeat(7,1fr)"; monthDiv.style.gap="2px";
         for(let i=0;i<30;i++){
-          const dayCell=document.createElement("div");
+          const dayCell = document.createElement("div");
           dayCell.style.border="1px solid rgba(255,255,255,0.3)"; dayCell.style.height="40px";
           monthDiv.appendChild(dayCell);
         }
         content.appendChild(monthDiv);
       }
 
-    } else if(card.type==="motivation"){
-      content.classList.add("motivation-card"); content.textContent=card.quote;
+    } else if(card.type === "motivation") {
+      content.classList.add("motivation-card");
+      content.textContent = card.quote;
     } else {
-      card.tasks.forEach(task=>{
-        const taskDiv=document.createElement("div"); taskDiv.classList.add("card-task");
+      card.tasks.forEach((task) => {
+        const taskDiv = document.createElement("div");
+        taskDiv.classList.add("card-task");
         if(task.done) taskDiv.classList.add("completed");
-        const checkbox=document.createElement("input"); checkbox.type="checkbox"; checkbox.checked=task.done;
-        checkbox.addEventListener("change",()=>{task.done=checkbox.checked; taskDiv.classList.toggle("completed",task.done);});
-        const label=document.createElement("label"); label.textContent=task.text;
-        taskDiv.appendChild(checkbox); taskDiv.appendChild(label); content.appendChild(taskDiv);
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.done;
+        checkbox.addEventListener("change", () => {
+          task.done = checkbox.checked;
+          taskDiv.classList.toggle("completed", task.done);
+        });
+
+        const label = document.createElement("label");
+        label.textContent = task.text;
+
+        taskDiv.appendChild(checkbox);
+        taskDiv.appendChild(label);
+        content.appendChild(taskDiv);
       });
     }
-    div.appendChild(content); homeCardsContainer.appendChild(div);
+
+    div.appendChild(content);
+    homeCardsContainer.appendChild(div);
   });
 
-  let dragSrcIndex=null;
-  homeCardsContainer.querySelectorAll(".home-card").forEach(card=>{
-    card.draggable=true;
-    card.addEventListener("dragstart",(e)=>{dragSrcIndex=card.dataset.index;e.dataTransfer.effectAllowed="move";});
-    card.addEventListener("dragover",(e)=>e.preventDefault());
-    card.addEventListener("drop",(e)=>{
+  // Drag & Drop
+  let dragSrcIndex = null;
+  homeCardsContainer.querySelectorAll(".home-card").forEach(card => {
+    card.draggable = true;
+    card.addEventListener("dragstart", (e) => {
+      dragSrcIndex = card.dataset.index;
+      e.dataTransfer.effectAllowed = "move";
+    });
+    card.addEventListener("dragover", (e) => e.preventDefault());
+    card.addEventListener("drop", (e) => {
       e.preventDefault();
-      const targetIndex=card.dataset.index;
-      const temp=homeCardsData[dragSrcIndex];
-      homeCardsData.splice(dragSrcIndex,1); homeCardsData.splice(targetIndex,0,temp);
+      const targetIndex = card.dataset.index;
+      const temp = homeCardsData[dragSrcIndex];
+      homeCardsData.splice(dragSrcIndex, 1);
+      homeCardsData.splice(targetIndex, 0, temp);
       renderHomeCards();
     });
   });
 }
 
-// Navigation
-navButtons.forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    const target=document.getElementById(btn.dataset.target);
+// ==================== NAVIGATION ====================
+navButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    const target = document.getElementById(btn.dataset.target);
     if(target) target.classList.add("active");
-    navButtons.forEach(b=>b.classList.remove("active")); btn.classList.add("active");
+    navButtons.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
   });
 });
 
-// Schriftart
-fontSelect.addEventListener("change",()=>{document.body.style.fontFamily=fontSelect.value;});
+// ==================== SETTINGS ====================
+fontSelect.addEventListener("change", () => {
+  document.body.style.fontFamily = fontSelect.value;
+});
 
-// UI
-function updateUI(){
-  if(isLoggedIn){
-    loginScreen.style.display="none"; homeScreen.classList.add("active");
-    document.querySelector(".bottom-nav").style.display="flex";
-    renderHomeCards(); updateDate();
-  }else{
-    loginScreen.style.display="flex"; loginScreen.style.opacity=1;
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    document.querySelector(".bottom-nav").style.display="none";
+// ==================== LOGIN & LOGOUT ====================
+loginBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
+registerBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
+logoutBtn.addEventListener("click", () => { isLoggedIn = false; updateUI(); });
+
+function updateUI() {
+  if(isLoggedIn) {
+    loginScreen.style.display = "none";
+    homeScreen.classList.add("active");
+    document.querySelector(".bottom-nav").style.display = "flex";
+
+    renderHomeCards();
+    updateDate();
+  } else {
+    loginScreen.style.display = "flex";
+    loginScreen.style.opacity = 1;
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.querySelector(".bottom-nav").style.display = "none";
   }
 }
 
-// Login/Register
-loginBtn.addEventListener("click",()=>{ isLoggedIn=true; updateUI(); });
-registerBtn.addEventListener("click",()=>{ isLoggedIn=true; updateUI(); });
-
-// Logout
-logoutBtn.addEventListener("click",()=>{ isLoggedIn=false; updateUI(); });
-
-// Initial
+// ==================== INITIAL ====================
 updateUI();
 
-// ===== Health Screen =====
-const painEntries=[];
-const intensityInput=document.getElementById("pain-intensity");
-const intensityLabel=document.getElementById("pain-intensity-label");
-const typeSelect=document.getElementById("pain-type");
-const notesInput=document.getElementById("pain-notes");
-const medCheckboxes=document.querySelectorAll(".med-checkbox");
-const saveBtn=document.getElementById("pain-save-btn");
-const exportBtn=document.getElementById("pain-export-btn");
-const calendarContainer=document.getElementById("calendar-entries");
+// ==================== HEALTH SCREEN ====================
+const painIntensity = document.getElementById("pain-intensity");
+const painLabel = document.getElementById("pain-intensity-label");
+const painType = document.getElementById("pain-type");
+const painNotes = document.getElementById("pain-notes");
+const medCheckboxes = document.querySelectorAll(".med-checkbox");
+const painSaveBtn = document.getElementById("pain-save-btn");
+const painExportBtn = document.getElementById("pain-export-btn");
+const calendarEntries = document.getElementById("calendar-entries");
+const supplementName = document.getElementById("supplement-name");
+const supplementTime = document.getElementById("supplement-time");
+const supplementAddBtn = document.getElementById("supplement-add-btn");
+const supplementList = document.getElementById("supplement-list");
 
-intensityInput.addEventListener("input",()=>{ intensityLabel.textContent=intensityInput.value; });
+let painData = [];
+let supplements = [];
 
-saveBtn.addEventListener("click",()=>{
-  const meds=Array.from(medCheckboxes).filter(c=>c.checked).map(c=>c.value);
-  const entry={date:new Date().toISOString().split("T")[0], intensity:parseInt(intensityInput.value), type:typeSelect.value, notes:notesInput.value, medications:meds};
-  painEntries.push(entry);
-  intensityInput.value=5; intensityLabel.textContent=5; notesInput.value="";
-  medCheckboxes.forEach(c=>c.checked=false);
-  renderCalendar();
+// Slider Label
+painIntensity.addEventListener("input", () => {
+  painLabel.textContent = painIntensity.value;
 });
 
-exportBtn.addEventListener("click",()=>{
-  if(!painEntries.length){ alert("Keine Einträge"); return; }
-  let csv="Datum,Schmerzstärke,Typ,Notizen,Medikamente\n";
-  painEntries.forEach(e=>{ csv+=`${e.date},${e.intensity},${e.type},"${e.notes}","${e.medications.join(";")}"\n`; });
-  const blob=new Blob([csv],{type:"text/csv"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a"); a.href=url; a.download=`schmerztagebuch_${new Date().toISOString().split("T")[0]}.csv`; a.click();
-  URL.revokeObjectURL(url);
+// Pain Save
+painSaveBtn.addEventListener("click", () => {
+  const meds = Array.from(medCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+  const entry = {
+    date: new Date(),
+    intensity: painIntensity.value,
+    type: painType.value,
+    notes: painNotes.value,
+    meds: meds
+  };
+  painData.push(entry);
+  renderPainCalendar();
+  alert("Eintrag gespeichert");
 });
 
-function renderCalendar(){
-  calendarContainer.innerHTML="";
-  for(let i=1;i<=30;i++){
-    const dayCell=document.createElement("div"); dayCell.classList.add("calendar-cell");
-    dayCell.innerHTML=`<strong>${i}</strong>`;
-    const dayStr=new Date(new Date().getFullYear(),new Date().getMonth(),i).toISOString().split("T")[0];
-    const entriesForDay=painEntries.filter(e=>e.date===dayStr);
-    entriesForDay.forEach(e=>{
-      const div=document.createElement("span"); div.classList.add("entry", e.type==="Migräne"?"migraine":e.type==="Spannungskopfschmerz"?"tension":"other");
-      div.textContent=`Schmerz: ${e.intensity}`; dayCell.appendChild(div);
-      e.medications.forEach(med=>{
-        const medDiv=document.createElement("span"); medDiv.classList.add("entry","medication"); medDiv.textContent=med; dayCell.appendChild(medDiv);
-      });
-    });
-    calendarContainer.appendChild(dayCell);
-  }
-}
-
-// ===== Supplements =====
-const supplementAddBtn=document.getElementById("supplement-add-btn");
-const supplementNameInput=document.getElementById("supplement-name");
-const supplementTimeInput=document.getElementById("supplement-time");
-const supplementListDiv=document.getElementById("supplement-list");
-let supplements=[];
-
-supplementAddBtn.addEventListener("click",()=>{
-  if(!supplementNameInput.value||!supplementTimeInput.value) return;
-  const sup={name:supplementNameInput.value,time:supplementTimeInput.value};
-  supplements.push(sup);
-  supplementNameInput.value=""; supplementTimeInput.value="";
-  renderSupplements();
-});
-
-function renderSupplements(){
-  supplementListDiv.innerHTML="";
-  supplements.forEach((s,i)=>{
-    const div=document.createElement("div");
-    div.innerHTML=`<span>${s.name} um ${s.time}</span><button onclick="removeSupplement(${i})">X</button>`;
-    supplementListDiv.appendChild(div);
+// Render Calendar
+function renderPainCalendar() {
+  calendarEntries.innerHTML = "";
+  painData.forEach(entry => {
+    const div = document.createElement("div");
+    div.classList.add("calendar-entry");
+    div.style.borderLeft = `4px solid hsl(${entry.intensity*36}, 80%, 50%)`; // Farbcode nach Intensität
+    div.textContent = `${entry.date.toLocaleString()}: ${entry.type}, Medikamente: ${entry.meds.join(", ")}`;
+    calendarEntries.appendChild(div);
   });
 }
-function removeSupplement(index){ supplements.splice(index,1); renderSupplements(); }
+
+// Supplements
+supplementAddBtn.addEventListener("click", () => {
+  if(!supplementName.value || !supplementTime.value) return;
+  supplements.push({name: supplementName.value, time: supplementTime.value});
+  renderSupplements();
+  supplementName.value = "";
+  supplementTime.value = "";
+});
+
+function renderSupplements() {
+  supplementList.innerHTML = "";
+  supplements.forEach((s, i) => {
+    const div = document.createElement("div");
+    div.textContent = `${s.time} - ${s.name}`;
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "❌";
+    delBtn.addEventListener("click", () => {
+      supplements.splice(i,1);
+      renderSupplements();
+    });
+    div.appendChild(delBtn);
+    supplementList.appendChild(div);
+  });
+}
+
+// Export CSV
+painExportBtn.addEventListener("click", () => {
+  let csv = "Datum,Zeit,Intensität,Typ,Medikamente,Notizen\n";
+  painData.forEach(e => {
+    csv += `"${e.date.toLocaleDateString()}","${e.date.toLocaleTimeString()}","${e.intensity}","${e.type}","${e.meds.join(";")}","${e.notes}"\n`;
+  });
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "pain_export.csv";
+  link.click();
+});
