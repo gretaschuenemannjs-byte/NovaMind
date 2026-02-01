@@ -1,97 +1,134 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovaMind</title>
-<link rel="stylesheet" href="style.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-</head>
-<body>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
-<!-- LOGIN SCREEN -->
-<div id="login-screen">
-  <div class="login-form">
-    <img src="logo.png" alt="Logo" class="login-logo">
-    <input type="email" id="email" placeholder="E-Mail">
-    <input type="password" id="password" placeholder="Passwort">
-    <div class="button-row">
-      <button id="login-btn">Login</button>
-      <button id="register-btn">Registrieren</button>
-    </div>
-  </div>
-</div>
+// Firebase-Konfiguration (wie zuvor)
+const firebaseConfig = {
+  apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+  authDomain: "novamind-gs.firebaseapp.com",
+  databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "novamind-gs",
+  storageBucket: "novamind-gs.firebasestorage.app",
+  messagingSenderId: "278309634253",
+  appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+};
 
-<!-- HOME SCREEN -->
-<div id="home-screen" class="screen">
-  <div class="home-title"><h2>Home</h2><span id="current-date"></span></div>
-  <div id="home-cards" class="home-cards"></div>
-</div>
+// Firebase Init
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-<!-- HEALTH SCREEN -->
-<div id="health-screen" class="screen">
-  <div class="health-container">
-    <div class="health-input">
-      <div class="input-row">
-        <input type="date" id="health-date">
-        <input type="time" id="health-time">
-      </div>
-      <div class="input-row">
-        <label for="pain-type">Schmerzart</label>
-        <select id="pain-type">
-          <option value="Migräne">Migräne</option>
-          <option value="Spannungskopfschmerzen">Spannungskopfschmerzen</option>
-          <option value="Sonstige">Sonstige</option>
-        </select>
-        <input type="text" id="pain-other" placeholder="Sonstige Schmerzen">
-      </div>
-      <div class="input-row">
-        <label for="pain-level">Schmerzstärke: <span id="pain-value">5</span></label>
-        <input type="range" min="1" max="10" value="5" id="pain-level">
-      </div>
-      <div class="input-row">
-        <label for="meds">Medikamente</label>
-        <select id="meds" multiple>
-          <option value="Triptane">Triptane</option>
-          <option value="Paracetamol">Paracetamol</option>
-          <option value="Ibuprofen">Ibuprofen</option>
-        </select>
-        <input type="text" id="med-other" placeholder="Weitere Medikamente">
-      </div>
-      <button id="save-health">Eintrag speichern</button>
-      <button id="export-health">Als PDF exportieren</button>
-    </div>
-    <div class="health-calendar" id="health-calendar"></div>
-  </div>
-</div>
+// Elemente
+const loginScreen = document.getElementById("login-screen");
+const homeScreen = document.getElementById("home-screen");
+const healthScreen = document.getElementById("health-screen");
+const profileScreen = document.getElementById("profile-screen");
+const loginBtn = document.getElementById("login-btn");
+const registerBtn = document.getElementById("register-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const navButtons = document.querySelectorAll(".nav-btn");
 
-<!-- PROFILE SCREEN -->
-<div id="profile-screen" class="screen">
-  <div class="settings-buttons">
-    <button id="logout-btn">Logout</button>
-  </div>
-</div>
+// Health Elemente
+const healthDate = document.getElementById("health-date");
+const healthTime = document.getElementById("health-time");
+const painLevel = document.getElementById("pain-level");
+const painValue = document.getElementById("pain-value");
+const painType = document.getElementById("pain-type");
+const painOther = document.getElementById("pain-other");
+const meds = document.getElementById("meds");
+const medOther = document.getElementById("med-other");
+const saveHealth = document.getElementById("save-health");
+const exportHealth = document.getElementById("export-health");
+const healthCalendar = document.getElementById("health-calendar");
 
-<!-- BOTTOM NAVIGATION -->
-<div class="bottom-nav">
-  <button class="nav-btn active" data-target="home-screen" title="Home">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M3 12 L12 3 L21 12 V21 H3 Z"></path>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="health-screen" title="Gesundheit">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M12 21s-6-4.35-10-10 4-10 10-4c6-6 10 4 10 10s-6 10-10 10z"/>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="profile-screen" title="Persönlich">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <circle cx="12" cy="8" r="4"/>
-      <path d="M4 20c0-4 8-4 8-4s8 0 8 4"/>
-    </svg>
-  </button>
-</div>
+// Login/Register
+loginBtn.addEventListener("click", ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  signInWithEmailAndPassword(auth,email,password).catch(err=>alert(err.message));
+});
 
-<script type="module" src="app.js"></script>
-</body>
-</html>
+registerBtn.addEventListener("click", ()=>{
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  createUserWithEmailAndPassword(auth,email,password).catch(err=>alert(err.message));
+});
+
+// Logout
+logoutBtn.addEventListener("click", ()=> signOut(auth));
+
+// Auth State
+onAuthStateChanged(auth,user=>{
+  if(user){
+    loginScreen.style.display="none";
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    homeScreen.classList.add("active");
+    document.querySelector(".bottom-nav").style.display="flex";
+  } else {
+    loginScreen.style.display="flex";
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.querySelector(".bottom-nav").style.display="none";
+  }
+});
+
+// Navigation
+navButtons.forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    const target = document.getElementById(btn.dataset.target);
+    if(target) target.classList.add("active");
+    navButtons.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+  });
+});
+
+// Health-Screen Logik
+const healthEntries = JSON.parse(localStorage.getItem("healthEntries"))||[];
+
+function renderHealthCalendar(){
+  healthCalendar.innerHTML="";
+  healthEntries.forEach((e,i)=>{
+    const div=document.createElement("div");
+    div.classList.add("home-card");
+    div.innerHTML=`<strong>${e.date} ${e.time}</strong><br>Typ: ${e.pain}<br>Stärke: ${e.level}<br>Medikamente: ${e.meds.join(", ")}<br><button data-index="${i}" class="delete-health">Löschen</button>`;
+    healthCalendar.appendChild(div);
+  });
+  document.querySelectorAll(".delete-health").forEach(btn=>{
+    btn.addEventListener("click",(ev)=>{
+      const idx = ev.target.dataset.index;
+      healthEntries.splice(idx,1);
+      localStorage.setItem("healthEntries",JSON.stringify(healthEntries));
+      renderHealthCalendar();
+    });
+  });
+}
+
+// Slider Update
+painLevel.addEventListener("input",()=>{ painValue.textContent=painLevel.value; });
+
+// Speichern
+saveHealth.addEventListener("click",()=>{
+  const entry={
+    date: healthDate.value,
+    time: healthTime.value,
+    pain: painType.value==="Sonstige"?painOther.value:painType.value,
+    level: painLevel.value,
+    meds: Array.from(meds.selectedOptions).map(o=>o.value).concat(medOther.value?medOther.value:[])
+  };
+  healthEntries.push(entry);
+  localStorage.setItem("healthEntries",JSON.stringify(healthEntries));
+  renderHealthCalendar();
+});
+
+// PDF Export
+exportHealth.addEventListener("click",()=>{
+  const doc = new jsPDF();
+  healthEntries.forEach((e,i)=>{
+    doc.text(`${e.date} ${e.time} | Typ: ${e.pain} | Stärke: ${e.level} | Meds: ${e.meds.join(", ")}`,10,10+i*10);
+  });
+  doc.save("health-export.pdf");
+});
+
+// Init Health-Date & Time
+const now = new Date();
+healthDate.value = now.toISOString().split("T")[0];
+healthTime.value = now.toTimeString().split(" ")[0].substring(0,5);
+renderHealthCalendar();
