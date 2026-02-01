@@ -3,15 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NovaMindGS</title>
+<title>NovaMind</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
 <!-- LOGIN SCREEN -->
 <div id="login-screen">
   <div class="login-form">
-    <img src="icon-512.png" alt="Logo" class="login-logo">
+    <img src="logo.png" alt="Logo" class="login-logo">
     <input type="email" id="email" placeholder="E-Mail">
     <input type="password" id="password" placeholder="Passwort">
     <div class="button-row">
@@ -22,107 +23,68 @@
 </div>
 
 <!-- HOME SCREEN -->
-<div class="screen" id="home-screen">
-  <div class="home-title">
-    <h2 id="current-date"></h2>
-  </div>
-  <div class="home-cards" id="home-cards"></div>
+<div id="home-screen" class="screen">
+  <div class="home-title"><h2>Home</h2><span id="current-date"></span></div>
+  <div id="home-cards" class="home-cards"></div>
 </div>
 
 <!-- HEALTH SCREEN -->
-<div class="screen" id="health-screen">
-  <h2>Gesundheit</h2>
+<div id="health-screen" class="screen">
   <div class="health-container">
     <div class="health-input">
       <div class="input-row">
-        <label>Datum:</label>
         <input type="date" id="health-date">
-        <label>Uhrzeit:</label>
         <input type="time" id="health-time">
       </div>
       <div class="input-row">
-        <label>Schmerzstärke:</label>
-        <input type="range" id="pain-level" min="1" max="10" value="5">
-        <span id="pain-value">5</span>
-      </div>
-      <div class="input-row">
-        <label>Schmerztyp:</label>
+        <label for="pain-type">Schmerzart</label>
         <select id="pain-type">
           <option value="Migräne">Migräne</option>
-          <option value="Spannungskopfschmerz">Spannungskopfschmerz</option>
-          <option value="Clusterkopfschmerz">Clusterkopfschmerz</option>
+          <option value="Spannungskopfschmerzen">Spannungskopfschmerzen</option>
           <option value="Sonstige">Sonstige</option>
         </select>
-        <input type="text" id="pain-other" placeholder="Wenn Sonstige">
+        <input type="text" id="pain-other" placeholder="Sonstige Schmerzen">
       </div>
       <div class="input-row">
-        <label>Medikamente:</label>
-        <select multiple id="meds">
+        <label for="pain-level">Schmerzstärke: <span id="pain-value">5</span></label>
+        <input type="range" min="1" max="10" value="5" id="pain-level">
+      </div>
+      <div class="input-row">
+        <label for="meds">Medikamente</label>
+        <select id="meds" multiple>
           <option value="Triptane">Triptane</option>
           <option value="Paracetamol">Paracetamol</option>
           <option value="Ibuprofen">Ibuprofen</option>
         </select>
         <input type="text" id="med-other" placeholder="Weitere Medikamente">
       </div>
-      <div class="input-row">
-        <button id="save-health">Speichern</button>
-        <button id="export-health">Exportieren</button>
-      </div>
+      <button id="save-health">Eintrag speichern</button>
+      <button id="export-health">Als PDF exportieren</button>
     </div>
     <div class="health-calendar" id="health-calendar"></div>
   </div>
 </div>
 
-<!-- PLACEHOLDER SCREENS -->
-<div class="screen" id="notes-screen"><h2>Notizen</h2></div>
-<div class="screen" id="todos-screen"><h2>ToDos</h2></div>
-<div class="screen" id="routines-screen"><h2>Routinen</h2></div>
-<div class="screen" id="calendar-screen"><h2>Kalender</h2></div>
-<div class="screen" id="profile-screen">
-  <h2>Persönliches</h2>
+<!-- PROFILE SCREEN -->
+<div id="profile-screen" class="screen">
   <div class="settings-buttons">
     <button id="logout-btn">Logout</button>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
+<!-- BOTTOM NAVIGATION -->
 <div class="bottom-nav">
-  <button class="nav-btn" data-target="notes-screen" title="Notizen">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <line x1="4" y1="6" x2="20" y2="6"/>
-      <line x1="4" y1="12" x2="20" y2="12"/>
-      <line x1="4" y1="18" x2="20" y2="18"/>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="todos-screen" title="To-Dos">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <rect x="4" y="5" width="16" height="16" rx="2"/>
-      <path d="M6 12l4 4 8-8"/>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="routines-screen" title="Routine">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <circle cx="12" cy="12" r="10"/>
-      <path d="M12 6v6l4 2"/>
-    </svg>
-  </button>
   <button class="nav-btn active" data-target="home-screen" title="Home">
-    <svg viewBox="0 0 24 24" width="28" height="28" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="calendar-screen" title="Kalender">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <rect x="3" y="4" width="18" height="18" rx="2"/>
-      <path d="M16 2v4M8 2v4"/>
+      <path d="M3 12 L12 3 L21 12 V21 H3 Z"></path>
     </svg>
   </button>
   <button class="nav-btn" data-target="health-screen" title="Gesundheit">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M12 21s-6-4.35-10-10 4-10 10-4 10 4 10 10-6 10-10 10z"/>
+      <path d="M12 21s-6-4.35-10-10 4-10 10-4c6-6 10 4 10 10s-6 10-10 10z"/>
     </svg>
   </button>
-  <button class="nav-btn" data-target="profile-screen" title="Profil">
+  <button class="nav-btn" data-target="profile-screen" title="Persönlich">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
       <circle cx="12" cy="8" r="4"/>
       <path d="M4 20c0-4 8-4 8-4s8 0 8 4"/>
