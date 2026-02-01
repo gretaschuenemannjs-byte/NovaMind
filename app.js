@@ -1,22 +1,8 @@
-// ====== LOGIN + FIREBASE SETUP ======
-const loginScreen = document.getElementById("login-screen");
-const homeScreen = document.getElementById("home-screen");
-const settingsScreen = document.getElementById("profile-screen");
-const loginBtn = document.getElementById("login-btn");
-const registerBtn = document.getElementById("register-btn");
-const logoutBtn = document.getElementById("logout-btn");
-const homeCardsContainer = document.getElementById("home-cards");
-const currentDateEl = document.getElementById("current-date");
-const fontSelect = document.getElementById("font-select");
-const healthCardsContainer = document.getElementById("health-cards");
-
-const navButtons = document.querySelectorAll(".nav-btn");
-
-// Firebase CDN muss im HTML eingebunden sein
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-import { getDatabase, ref, set, push, get, child, remove } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
   authDomain: "novamind-gs.firebaseapp.com",
@@ -31,50 +17,59 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getDatabase(app);
 
-setPersistence(auth, browserLocalPersistence);
+// DOM Elements
+const loginScreen = document.getElementById("login-screen");
+const homeScreen = document.getElementById("home-screen");
+const settingsScreen = document.getElementById("settings-screen");
+const healthScreen = document.getElementById("health-screen");
 
-let currentUser = null;
-let homeCardsData = [
-  { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }, { text: "Meeting vorbereiten", done: false }]},
-  { type: "routines", title: "Routinen", tasks: [{ text: "Meditation", done: false }, { text: "Workout", done: false }]},
-  { type: "calendar", title: "Kalender", view: "day", tasks: [
-      { text: "10:00 Projektbesprechung", done: false },
-      { text: "15:30 Arzttermin", done: false }
-    ]},
-  { type: "motivation", title: "Motivation", quote: "Du schaffst alles, was du dir vornimmst!"}
-];
+const loginBtn = document.getElementById("login-btn");
+const registerBtn = document.getElementById("register-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
 
-let healthData = []; // Array für Health-Einträge
+const navButtons = document.querySelectorAll(".nav-btn");
+const currentDateEl = document.getElementById("current-date");
+const homeCardsContainer = document.getElementById("home-cards");
+const healthCardsContainer = document.getElementById("health-cards");
+const fontSelect = document.getElementById("font-select");
 
-// ====== LOGIN + REGISTER ======
+let userId = null;
+
+// ======= LOGIN / AUTH =======
 loginBtn.addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  signInWithEmailAndPassword(auth, email, password)
-    .then(userCredential => { currentUser = userCredential.user; updateUI(); loadHealthData(); })
+  signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
     .catch(err => alert(err.message));
 });
 
 registerBtn.addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  createUserWithEmailAndPassword(auth, email, password)
-    .then(userCredential => { currentUser = userCredential.user; updateUI(); })
+  createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
     .catch(err => alert(err.message));
 });
 
-// Logout
 logoutBtn.addEventListener("click", () => {
-  signOut(auth).then(() => { currentUser = null; updateUI(); });
+  signOut(auth);
 });
 
-// Firebase State Listener
 onAuthStateChanged(auth, user => {
-  if(user){ currentUser = user; updateUI(); loadHealthData(); }
-  else{ currentUser = null; updateUI(); }
+  if(user) {
+    userId = user.uid;
+    loginScreen.style.display = "none";
+    document.querySelector(".bottom-nav").style.display = "flex";
+    homeScreen.classList.add("active");
+    renderHomeCards();
+    renderHealthCards();
+    updateDate();
+  } else {
+    userId = null;
+    loginScreen.style.display = "flex";
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.querySelector(".bottom-nav").style.display = "none";
+  }
 });
 
-// ====== NAVIGATION ======
+// ======= NAVIGATION =======
 navButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
@@ -85,21 +80,32 @@ navButtons.forEach(btn => {
   });
 });
 
-// ====== FONT CHANGE ======
+// ======= FONT SETTINGS =======
 fontSelect.addEventListener("change", () => {
   document.body.style.fontFamily = fontSelect.value;
 });
 
-// ====== HOME SCREEN ======
+// ======= DATE =======
 function updateDate() {
   const now = new Date();
   const options = { weekday:"short", day:"numeric", month:"short", year:"numeric"};
   currentDateEl.textContent = now.toLocaleDateString("de-DE", options);
 }
 
+// ======= HOME SCREEN =======
+let homeCardsData = [
+  { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }, { text: "Meeting vorbereiten", done: false }]},
+  { type: "routines", title: "Routinen", tasks: [{ text: "Meditation", done: false }, { text: "Workout", done: false }]},
+  { type: "calendar", title: "Kalender", view: "day", tasks: [
+      { text: "10:00 Projektbesprechung", done: false },
+      { text: "15:30 Arzttermin", done: false }
+    ]},
+  { type: "motivation", title: "Motivation", quote: "Du schaffst alles, was du dir vornimmst!"}
+];
+
 function renderHomeCards() {
   homeCardsContainer.innerHTML = "";
-  homeCardsData.forEach((card, index) => {
+  homeCardsData.forEach((card,index) => {
     const div = document.createElement("div");
     div.classList.add("home-card");
     div.dataset.index = index;
@@ -112,120 +118,160 @@ function renderHomeCards() {
     const content = document.createElement("div");
     content.classList.add("card-content");
 
-    if(card.type === "motivation"){ content.classList.add("motivation-card"); content.textContent = card.quote; }
-    else{ 
+    if(card.type === "motivation") {
+      content.classList.add("motivation-card");
+      content.textContent = card.quote;
+    } else {
       card.tasks.forEach(task => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("card-task");
         if(task.done) taskDiv.classList.add("completed");
-        const checkbox = document.createElement("input"); checkbox.type="checkbox"; checkbox.checked=task.done;
-        checkbox.addEventListener("change", ()=>{ task.done = checkbox.checked; taskDiv.classList.toggle("completed", task.done); });
-        const label = document.createElement("label"); label.textContent = task.text;
-        taskDiv.appendChild(checkbox); taskDiv.appendChild(label); content.appendChild(taskDiv);
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.done;
+        checkbox.addEventListener("change", ()=>{
+          task.done = checkbox.checked;
+          taskDiv.classList.toggle("completed", task.done);
+        });
+
+        const label = document.createElement("label");
+        label.textContent = task.text;
+
+        taskDiv.appendChild(checkbox);
+        taskDiv.appendChild(label);
+        content.appendChild(taskDiv);
       });
     }
 
-    div.appendChild(content); homeCardsContainer.appendChild(div);
+    div.appendChild(content);
+    homeCardsContainer.appendChild(div);
   });
 
   // Drag & Drop
   let dragSrcIndex = null;
   homeCardsContainer.querySelectorAll(".home-card").forEach(card => {
     card.draggable = true;
-    card.addEventListener("dragstart", e => { dragSrcIndex = card.dataset.index; e.dataTransfer.effectAllowed = "move"; });
+    card.addEventListener("dragstart",(e)=>{
+      dragSrcIndex = card.dataset.index;
+      e.dataTransfer.effectAllowed = "move";
+    });
     card.addEventListener("dragover", e => e.preventDefault());
-    card.addEventListener("drop", e => {
+    card.addEventListener("drop",(e)=>{
       e.preventDefault();
       const targetIndex = card.dataset.index;
       const temp = homeCardsData[dragSrcIndex];
-      homeCardsData.splice(dragSrcIndex, 1);
-      homeCardsData.splice(targetIndex, 0, temp);
+      homeCardsData.splice(dragSrcIndex,1);
+      homeCardsData.splice(targetIndex,0,temp);
       renderHomeCards();
     });
   });
 }
 
-// ====== HEALTH SCREEN ======
-function renderHealthCards(){
+// ======= HEALTH SCREEN =======
+let healthData = []; // aus Firebase oder lokal
+function renderHealthCards() {
+  if(!userId) return;
   healthCardsContainer.innerHTML = "";
 
-  // Einträge hinzufügen
+  // Formular Kachel für neuen Eintrag
   const addCard = document.createElement("div");
   addCard.classList.add("health-card");
+  const title = document.createElement("h3");
+  title.textContent = "Neuer Eintrag";
+  addCard.appendChild(title);
 
-  const title = document.createElement("h3"); title.textContent="Neuer Eintrag"; addCard.appendChild(title);
+  const dateInput = document.createElement("input");
+  dateInput.type = "date";
+  addCard.appendChild(dateInput);
 
-  const dateInput = document.createElement("input"); dateInput.type="date"; addCard.appendChild(dateInput);
-  const timeInput = document.createElement("input"); timeInput.type="time"; addCard.appendChild(timeInput);
-  const painInput = document.createElement("input"); painInput.type="number"; painInput.placeholder="Schmerzstärke 1-10"; addCard.appendChild(painInput);
+  const timeInput = document.createElement("input");
+  timeInput.type = "time";
+  addCard.appendChild(timeInput);
 
-  const painTypeInput = document.createElement("select");
-  ["Kopfschmerz","Migräne","Andere"].forEach(p=>{ const o=document.createElement("option"); o.value=o.text=p; painTypeInput.appendChild(o); });
-  addCard.appendChild(painTypeInput);
+  const painLevel = document.createElement("select");
+  ["1","2","3","4","5"].forEach(l => {
+    const opt = document.createElement("option");
+    opt.value = l;
+    opt.textContent = l;
+    painLevel.appendChild(opt);
+  });
+  addCard.appendChild(painLevel);
 
-  const medInput = document.createElement("select"); medInput.multiple=true;
-  ["Triptane","Paracetamol","Ibuprofen"].forEach(m=>{ const o=document.createElement("option"); o.value=o.text=m; medInput.appendChild(o); });
-  addCard.appendChild(medInput);
+  const painType = document.createElement("input");
+  painType.type = "text";
+  painType.placeholder = "Schmerzart";
+  addCard.appendChild(painType);
 
-  const noteInput = document.createElement("textarea"); noteInput.placeholder="Notizen..."; addCard.appendChild(noteInput);
+  const notes = document.createElement("textarea");
+  notes.placeholder = "Notizen";
+  addCard.appendChild(notes);
 
-  const saveBtn = document.createElement("button"); saveBtn.textContent="Speichern";
-  saveBtn.addEventListener("click", ()=>{ 
-    if(!dateInput.value) return alert("Datum erforderlich");
+  const meds = document.createElement("select");
+  ["Triptane","Paracetamol","Ibuprofen"].forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m;
+    opt.textContent = m;
+    meds.appendChild(opt);
+  });
+  addCard.appendChild(meds);
+
+  const addBtn = document.createElement("button");
+  addBtn.textContent = "Eintrag speichern";
+  addBtn.addEventListener("click", ()=>{
+    if(!dateInput.value || !timeInput.value) return alert("Datum & Zeit auswählen");
     const newEntry = {
-      date: dateInput.value, time: timeInput.value, pain: painInput.value,
-      type: painTypeInput.value, medications: Array.from(medInput.selectedOptions).map(o=>o.value), note: noteInput.value
+      date: dateInput.value,
+      time: timeInput.value,
+      pain: painLevel.value,
+      type: painType.value,
+      notes: notes.value,
+      meds: meds.value
     };
-    const newRef = push(ref(db, `health/${currentUser.uid}`));
-    set(newRef,newEntry).then(()=>{ loadHealthData(); });
-  });
-  addCard.appendChild(saveBtn);
-
-  healthCardsContainer.appendChild(addCard);
-
-  // vorhandene Einträge
-  healthData.forEach((entry)=>{
-    const card = document.createElement("div"); card.classList.add("health-card");
-    const t=document.createElement("h3"); t.textContent=`${entry.date} ${entry.time}`; card.appendChild(t);
-    const p=document.createElement("div"); p.textContent=`Schmerz: ${entry.pain} | Typ: ${entry.type}`; card.appendChild(p);
-    const m=document.createElement("div"); m.textContent=`Medikamente: ${entry.medications.join(", ")}`; card.appendChild(m);
-    if(entry.note){ const n=document.createElement("div"); n.textContent=`Notiz: ${entry.note}`; card.appendChild(n); }
-
-    const delBtn=document.createElement("button"); delBtn.textContent="Löschen";
-    delBtn.addEventListener("click", ()=>{
-      remove(child(ref(db, `health/${currentUser.uid}`), entry.id)).then(()=>{ loadHealthData(); });
-    });
-    card.appendChild(delBtn);
-
-    healthCardsContainer.appendChild(card);
-  });
-}
-
-function loadHealthData(){
-  if(!currentUser) return;
-  get(ref(db, `health/${currentUser.uid}`)).then(snapshot=>{
-    healthData=[];
-    snapshot.forEach(snap=>{
-      const val=snap.val(); val.id=snap.key; healthData.push(val);
-    });
+    healthData.push(newEntry);
+    push(ref(db,"health/"+userId), newEntry);
     renderHealthCards();
   });
+  addCard.appendChild(addBtn);
+  healthCardsContainer.appendChild(addCard);
+
+  // bestehende Einträge aus Firebase abrufen
+  const dbRef = ref(db,"health/"+userId);
+  onValue(dbRef, snapshot=>{
+    const data = snapshot.val();
+    healthCardsContainer.querySelectorAll(".entry-card").forEach(c=>c.remove());
+    if(data){
+      Object.keys(data).forEach(key=>{
+        const entry = data[key];
+        const card = document.createElement("div");
+        card.classList.add("health-card","entry-card");
+        const h = document.createElement("h3");
+        h.textContent = entry.date+" "+entry.time;
+        card.appendChild(h);
+
+        const p = document.createElement("div");
+        p.textContent = `Schmerzstärke: ${entry.pain}, Art: ${entry.type}, Med: ${entry.meds}`;
+        card.appendChild(p);
+
+        const n = document.createElement("div");
+        n.textContent = entry.notes;
+        card.appendChild(n);
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Löschen";
+        delBtn.addEventListener("click", ()=>{
+          remove(ref(db,"health/"+userId+"/"+key));
+        });
+        card.appendChild(delBtn);
+        healthCardsContainer.appendChild(card);
+      });
+    }
+  });
 }
 
-// ====== UPDATE UI ======
-function updateUI(){
-  if(currentUser){
-    loginScreen.style.display="none";
-    homeScreen.classList.add("active");
-    document.querySelector(".bottom-nav").style.display="flex";
-    renderHomeCards(); updateDate(); renderHealthCards();
-  } else {
-    loginScreen.style.display="flex";
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    document.querySelector(".bottom-nav").style.display="none";
-  }
-}
-
-// ====== INITIAL ======
-updateUI();
-
+// ======= INITIAL UI =======
+document.addEventListener("DOMContentLoaded", ()=>{
+  renderHomeCards();
+  renderHealthCards();
+  updateDate();
+});
