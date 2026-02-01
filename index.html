@@ -29,11 +29,6 @@
   <div class="home-cards" id="home-cards"></div>
 </div>
 
-<!-- HEALTH SCREEN -->
-<div class="screen" id="health-screen">
-  <div class="health-cards" id="health-cards"></div>
-</div>
-
 <!-- SETTINGS SCREEN -->
 <div class="screen" id="settings-screen">
   <h2>Einstellungen</h2>
@@ -48,6 +43,76 @@
     <button id="logout-btn">Logout</button>
   </div>
 </div>
+
+<!-- HEALTH SCREEN -->
+<div class="screen" id="health-screen">
+  <h2>Gesundheit</h2>
+  <div class="health-container">
+    <div class="health-entry">
+      <div class="entry-row">
+        <label>Datum:</label>
+        <input type="date" id="health-date">
+        <label>Uhrzeit:</label>
+        <input type="time" id="health-time">
+      </div>
+
+      <div class="entry-row">
+        <label>Schmerzstärke:</label>
+        <input type="range" id="pain-slider" min="1" max="10" value="1">
+        <span id="pain-value">1</span>
+      </div>
+
+      <div class="entry-row">
+        <label>Schmerztyp:</label>
+        <select id="pain-type">
+          <option value="">Keine</option>
+          <option value="Migräne">Migräne</option>
+          <option value="Spannungskopfschmerzen">Spannungskopfschmerzen</option>
+          <option value="Sonstige">Sonstige</option>
+        </select>
+        <input type="text" id="pain-other" placeholder="Sonstige Schmerzen" style="display:none;">
+      </div>
+
+      <div class="entry-row">
+        <label>Medikamente:</label>
+        <select multiple id="medications">
+          <option value="Triptane">Triptane</option>
+          <option value="Paracetamol">Paracetamol</option>
+          <option value="Ibuprofen">Ibuprofen</option>
+          <option value="Keine">Keine</option>
+        </select>
+        <input type="text" id="medication-other" placeholder="Weitere Medikamente">
+      </div>
+
+      <div class="entry-buttons">
+        <button id="save-health">Speichern</button>
+        <button id="delete-health">Löschen</button>
+        <button id="export-health">Exportieren (PDF)</button>
+      </div>
+    </div>
+
+    <div class="health-calendar" id="health-calendar">
+      <!-- Hier wird der Kalender angezeigt -->
+    </div>
+
+    <div class="health-supplements">
+      <h3>Supplements & Erinnerungen</h3>
+      <div class="supplement-entry">
+        <input type="text" id="supplement-name" placeholder="Supplementname">
+        <input type="time" id="supplement-time">
+        <button id="add-supplement">Hinzufügen</button>
+      </div>
+      <div id="supplement-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PLACEHOLDER SCREENS -->
+<div class="screen" id="notes-screen"></div>
+<div class="screen" id="todos-screen"></div>
+<div class="screen" id="routines-screen"></div>
+<div class="screen" id="calendar-screen"></div>
+<div class="screen" id="profile-screen"></div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
@@ -70,7 +135,7 @@
       <path d="M12 6v6l4 2"/>
     </svg>
   </button>
-  <button class="nav-btn active" data-target="home-screen" title="Home">
+  <button class="nav-btn" data-target="home-screen" title="Home" class="active">
     <svg viewBox="0 0 24 24" width="28" height="28" stroke="#fff" fill="none" stroke-width="2">
       <path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
     </svg>
@@ -82,9 +147,8 @@
     </svg>
   </button>
   <button class="nav-btn" data-target="health-screen" title="Gesundheit">
-    <!-- Symmetrisches Linien-Herz -->
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M12 21C12 21 4 14 4 8C4 5.23858 6.23858 3 9 3C10.6569 3 12 4.34315 12 4.34315C12 4.34315 13.3431 3 15 3C17.7614 3 20 5.23858 20 8C20 14 12 21 12 21Z"/>
+      <path d="M12 21c-6-6-10-10-10-14 0-4 4-8 10-2 6-6 10-2 10 2 0 4-4 8-10 14z"/>
     </svg>
   </button>
   <button class="nav-btn" data-target="profile-screen" title="Profil">
@@ -95,6 +159,6 @@
   </button>
 </div>
 
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
