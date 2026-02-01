@@ -29,21 +29,9 @@
   <div class="home-cards" id="home-cards"></div>
 </div>
 
-<!-- PLACEHOLDER SCREENS -->
-<div class="screen" id="notes-screen"><h2>Notizen (Platzhalter)</h2></div>
-<div class="screen" id="todos-screen"><h2>To-Dos (Platzhalter)</h2></div>
-<div class="screen" id="routines-screen"><h2>Routinen (Platzhalter)</h2></div>
-<div class="screen" id="calendar-screen"><h2>Kalender (Platzhalter)</h2></div>
-
-<!-- HEALTH SCREEN -->
-<div class="screen" id="health-screen">
-  <h2>Gesundheit</h2>
-  <div class="health-cards" id="health-cards"></div>
-</div>
-
-<!-- PROFILE/SETTINGS SCREEN -->
-<div class="screen" id="profile-screen">
-  <h2>Persönlich / Einstellungen</h2>
+<!-- SETTINGS SCREEN -->
+<div class="screen" id="settings-screen">
+  <h2>Einstellungen</h2>
   <div class="settings-buttons">
     <label for="font-select">Schriftart auswählen:</label>
     <select id="font-select">
@@ -55,6 +43,21 @@
     <button id="logout-btn">Logout</button>
   </div>
 </div>
+
+<!-- HEALTH SCREEN -->
+<div class="screen" id="health-screen">
+  <div class="home-title">
+    <h2>Gesundheit</h2>
+  </div>
+  <div class="health-cards" id="health-cards"></div>
+</div>
+
+<!-- PLACEHOLDER SCREENS -->
+<div class="screen" id="notes-screen"></div>
+<div class="screen" id="todos-screen"></div>
+<div class="screen" id="routines-screen"></div>
+<div class="screen" id="calendar-screen"></div>
+<div class="screen" id="profile-screen"></div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
@@ -89,9 +92,8 @@
     </svg>
   </button>
   <button class="nav-btn" data-target="health-screen" title="Gesundheit">
-    <!-- Korrektes Herzsymbol -->
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="#ff4d4d" stroke-width="2">
-      <path d="M12 21C12 21 4 13.5 4 8a5 5 0 0 1 10 0 5 5 0 0 1 10 0c0 5.5-8 13-8 13z"/>
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <path d="M12 21s-6-4.35-10-10 4-10 10-4 10 4 10 10-6 10-10 10z"/>
     </svg>
   </button>
   <button class="nav-btn" data-target="profile-screen" title="Profil">
@@ -102,6 +104,6 @@
   </button>
 </div>
 
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>
