@@ -48,51 +48,43 @@
 <div class="screen" id="health-screen">
   <h2>Gesundheit</h2>
 
-  <!-- Schmerztracking -->
-  <div class="home-card" id="pain-tracker">
-    <h3>Schmerzen & Migräne eintragen</h3>
-
-    <label>Schmerzstärke: <span id="pain-intensity-label">5</span></label>
-    <input type="range" id="pain-intensity" min="0" max="10" value="5">
-
-    <label>Schmerztyp:</label>
+  <div class="health-container">
+    <h3>Schmerztracken</h3>
+    <label for="pain-type">Schmerztyp:</label>
     <select id="pain-type">
-      <option>Migräne</option>
-      <option>Spannungskopfschmerz</option>
-      <option>Sonstiges</option>
+      <option value="Migräne">Migräne</option>
+      <option value="Spannungskopfschmerz">Spannungskopfschmerz</option>
+      <option value="Andere">Andere</option>
     </select>
 
-    <label>Notizen:</label>
-    <textarea id="pain-notes" placeholder="Optional"></textarea>
+    <label for="pain-intensity">Schmerzstärke: <span id="pain-intensity-label">5</span></label>
+    <input type="range" id="pain-intensity" min="0" max="10" value="5">
 
-    <label>Medikamente eingenommen?</label>
-    <div id="pain-meds-list">
-      <label><input type="checkbox" class="med-checkbox" value="Triptane"> Triptane</label>
-      <label><input type="checkbox" class="med-checkbox" value="Paracetamol"> Paracetamol</label>
-      <label><input type="checkbox" class="med-checkbox" value="Ibuprofen"> Ibuprofen</label>
+    <label for="pain-notes">Notizen:</label>
+    <textarea id="pain-notes" placeholder="z.B. wann aufgetreten"></textarea>
+
+    <div class="medications">
+      <label>Medikamente:</label><br>
+      <input type="checkbox" class="med-checkbox" value="Triptane"> Triptane
+      <input type="checkbox" class="med-checkbox" value="Paracetamol"> Paracetamol
+      <input type="checkbox" class="med-checkbox" value="Ibuprofen"> Ibuprofen
     </div>
 
-    <button id="pain-save-btn">Eintragen</button>
-    <button id="pain-export-btn">Exportieren</button>
-  </div>
+    <button id="pain-save-btn">Eintrag speichern</button>
+    <button id="pain-export-btn">Exportieren (CSV)</button>
 
-  <!-- Schmerz-Kalender -->
-  <div class="home-card" id="pain-calendar">
-    <h3>Kalenderübersicht</h3>
-    <div id="calendar-entries"></div>
-  </div>
+    <h3>Kalender</h3>
+    <div id="calendar-entries" class="calendar-container"></div>
 
-  <!-- Supplement / Tablettenverwaltung -->
-  <div class="home-card" id="supplement-tracker">
-    <h3>Tabletten & Supplements</h3>
+    <h3>Supplements / tägliche Tabletten</h3>
+    <label for="supplement-name">Name:</label>
+    <input type="text" id="supplement-name" placeholder="Vitamin D">
 
-    <label>Neue Tablette/Supplement hinzufügen:</label>
-    <input type="text" id="supplement-name" placeholder="Name">
+    <label for="supplement-time">Uhrzeit:</label>
     <input type="time" id="supplement-time">
-    <button id="supplement-add-btn">Hinzufügen</button>
 
-    <h4>Meine Tabletten:</h4>
-    <div id="supplement-list"></div>
+    <button id="supplement-add-btn">Hinzufügen</button>
+    <div id="supplement-list" class="supplement-list"></div>
   </div>
 </div>
 
@@ -141,6 +133,28 @@
   </button>
 </div>
 
-<script src="app.js"></script>
+<!-- Firebase SDK + App.js -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+  authDomain: "novamind-gs.firebaseapp.com",
+  databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "novamind-gs",
+  storageBucket: "novamind-gs.firebasestorage.app",
+  messagingSenderId: "278309634253",
+  appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+import './app.js';
+</script>
+
 </body>
 </html>
+
