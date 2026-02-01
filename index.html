@@ -29,12 +29,27 @@
   <div class="home-cards" id="home-cards"></div>
 </div>
 
+<!-- SETTINGS SCREEN -->
+<div class="screen" id="settings-screen">
+  <h2>Einstellungen</h2>
+  <div class="settings-buttons">
+    <label for="font-select">Schriftart auswählen:</label>
+    <select id="font-select">
+      <option value="Century Gothic" selected>Century Gothic</option>
+      <option value="Arial">Arial</option>
+      <option value="Verdana">Verdana</option>
+      <option value="Poppins">Poppins</option>
+    </select>
+    <button id="logout-btn">Logout</button>
+  </div>
+</div>
+
 <!-- HEALTH SCREEN -->
 <div class="screen" id="health-screen">
   <h2>Gesundheit</h2>
 
   <!-- Schmerztracking -->
-  <div id="pain-tracker" class="health-card">
+  <div class="home-card" id="pain-tracker">
     <h3>Schmerzen & Migräne eintragen</h3>
 
     <label>Schmerzstärke: <span id="pain-intensity-label">5</span></label>
@@ -50,40 +65,34 @@
     <label>Notizen:</label>
     <textarea id="pain-notes" placeholder="Optional"></textarea>
 
-    <label>
-      <input type="checkbox" id="pain-medication-toggle">
-      Medikament eingenommen?
-    </label>
-
-    <div id="pain-medication-fields" style="display:none;">
-      <input type="text" id="pain-med-name" placeholder="Name">
-      <input type="text" id="pain-med-dose" placeholder="Dosierung">
-      <input type="time" id="pain-med-time">
+    <label>Medikamente eingenommen?</label>
+    <div id="pain-meds-list">
+      <label><input type="checkbox" class="med-checkbox" value="Triptane"> Triptane</label>
+      <label><input type="checkbox" class="med-checkbox" value="Paracetamol"> Paracetamol</label>
+      <label><input type="checkbox" class="med-checkbox" value="Ibuprofen"> Ibuprofen</label>
     </div>
 
-    <button id="pain-save-btn">Speichern</button>
-    <button id="pain-export-btn">Exportieren für Arzt</button>
+    <button id="pain-save-btn">Eintragen</button>
+    <button id="pain-export-btn">Exportieren</button>
   </div>
 
-  <!-- Übersicht der Einträge -->
-  <div id="pain-log" class="health-card">
-    <h3>Schmerztagebuch</h3>
-    <div id="pain-entries"></div>
+  <!-- Schmerz-Kalender -->
+  <div class="home-card" id="pain-calendar">
+    <h3>Kalenderübersicht</h3>
+    <div id="calendar-entries"></div>
   </div>
-</div>
-  
-<!-- SETTINGS SCREEN -->
-<div class="screen" id="settings-screen">
-  <h2>Einstellungen</h2>
-  <div class="settings-buttons">
-    <label for="font-select">Schriftart auswählen:</label>
-    <select id="font-select">
-      <option value="Century Gothic" selected>Century Gothic</option>
-      <option value="Arial">Arial</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Poppins">Poppins</option>
-    </select>
-    <button id="logout-btn">Logout</button>
+
+  <!-- Supplement / Tablettenverwaltung -->
+  <div class="home-card" id="supplement-tracker">
+    <h3>Tabletten & Supplements</h3>
+
+    <label>Neue Tablette/Supplement hinzufügen:</label>
+    <input type="text" id="supplement-name" placeholder="Name">
+    <input type="time" id="supplement-time">
+    <button id="supplement-add-btn">Hinzufügen</button>
+
+    <h4>Meine Tabletten:</h4>
+    <div id="supplement-list"></div>
   </div>
 </div>
 
@@ -119,13 +128,11 @@
       <path d="M16 2v4M8 2v4"/>
     </svg>
   </button>
- <button class="nav-btn" data-target="health-screen" title="Gesundheit">
-  <!-- Symmetrisches Herz -->
-  <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-    <path d="M12 21C12 21 4 13.5 4 8.5C4 5 7 2 12 6C17 2 20 5 20 8.5C20 13.5 12 21 12 21Z"/>
-  </svg>
-</button>
-
+  <button class="nav-btn" data-target="health-screen" title="Gesundheit">
+    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
+      <path d="M12 21C12 21 4 13.5 4 8.5C4 5 7 2 12 6C17 2 20 5 20 8.5C20 13.5 12 21 12 21Z"/>
+    </svg>
+  </button>
   <button class="nav-btn" data-target="profile-screen" title="Profil">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
       <circle cx="12" cy="8" r="4"/>
@@ -133,20 +140,6 @@
     </svg>
   </button>
 </div>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
-    authDomain: "novamind-gs.firebaseapp.com",
-    projectId: "novamind-gs",
-    appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-</script>
 
 <script src="app.js"></script>
 </body>
