@@ -6,6 +6,7 @@
   --calendar-icon-active: #32a064;
 }
 
+/* GLOBAL */
 html, body {
   height: 100%;
   margin: 0;
@@ -34,10 +35,13 @@ html, body {
 .home-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .home-title h2 { margin: 0; font-weight: normal; }
 .home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+
 .home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
 .home-card:active { cursor: grabbing; }
+
 .card-title { font-weight: bold; margin-bottom: 8px; }
 .card-content { font-size: 14px; }
+
 .card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
 .card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
 .card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
@@ -62,21 +66,27 @@ html, body {
 .settings-buttons button, .settings-buttons select { padding: 12px; border-radius: 12px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; font-size: 16px; }
 .settings-buttons select { appearance: none; }
 
+/* HEALTH SCREEN */
+.health-container { display: flex; flex-direction: column; gap: 12px; max-width: 400px; margin: auto; }
+.health-container label { font-weight: bold; margin-top: 8px; display: block; }
+.health-container textarea { width: 100%; padding: 8px; border-radius: 12px; border: none; background: rgba(255,255,255,0.2); color: #fff; min-height: 60px; resize: vertical; }
+.health-container input[type="range"] { width: 100%; }
+.health-container select { width: 100%; padding: 8px; border-radius: 12px; border: none; background: rgba(255,255,255,0.2); color: #fff; }
+.health-container button { background: var(--accent-color); color: #fff; border: none; border-radius: 12px; padding: 10px; cursor: pointer; transition: background 0.3s; }
+.health-container button:hover { background: #2c8b5e; }
+
+/* CALENDAR ENTRIES */
+.calendar-container { display: flex; flex-direction: column; gap: 6px; max-height: 300px; overflow-y: auto; margin-top: 8px; }
+.calendar-entry { padding: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; font-size: 14px; }
+
+/* SUPPLEMENTS */
+.supplement-list { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+.supplement-list div { padding: 6px 8px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+.supplement-list button { background: none; border: none; color: #fff; cursor: pointer; font-size: 14px; }
+
 /* RESPONSIVE */
 @media (max-width: 480px) {
   .home-card { flex: 1 1 90%; min-width: 90%; }
   #login-screen { padding-top: 60px; }
+  .health-container { max-width: 95%; padding: 0 8px; }
 }
-
-/* HEALTH SCREEN */
-.health-container { display:flex; flex-direction:column; gap:10px; padding:16px; }
-#calendar-entries { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-.calendar-container .calendar-cell { border:1px solid rgba(255,255,255,0.3); padding:4px; min-height:60px; position:relative; }
-.entry { display:block; font-size:12px; margin-top:2px; padding:2px 4px; border-radius:4px; color:#fff; }
-.entry.migraine { background:#e74c3c; }
-.entry.tension { background:#f39c12; }
-.entry.other { background:#3498db; }
-.entry.medication { background:#2ecc71; }
-
-.supplement-list div { display:flex; justify-content:space-between; align-items:center; padding:4px 0; }
-.supplement-list button { background:red; color:#fff; border:none; border-radius:4px; padding:2px 6px; cursor:pointer; }
