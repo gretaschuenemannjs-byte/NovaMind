@@ -34,25 +34,22 @@ html, body {
 .home-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .home-title h2 { margin: 0; font-weight: normal; }
 .home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-
-.home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; margin-bottom: 16px;}
+.home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
 .home-card:active { cursor: grabbing; }
-
 .card-title { font-weight: bold; margin-bottom: 8px; }
 .card-content { font-size: 14px; }
+.card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+.card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
+.card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
+.card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
 
-/* Schmerz/Kalender-Styles */
-#pain-meds-list { display: flex; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
-#calendar-entries { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; }
-.calendar-cell { min-height: 60px; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 4px; font-size: 12px; position: relative; }
-.calendar-cell .entry { display: block; padding: 2px 4px; border-radius: 6px; font-size: 11px; margin-bottom: 2px; color: #fff; }
-.migraine { background-color: #e74c3c; }
-.tension { background-color: #f1c40f; }
-.other { background-color: #3498db; }
-.medication { background-color: #2ecc71; }
+/* MOTIVATION CARD */
+.motivation-card { text-align: center; font-style: italic; font-size: 16px; }
 
-/* Supplement Liste */
-#supplement-list div { display: flex; justify-content: space-between; padding: 6px; margin: 4px 0; background: rgba(255,255,255,0.2); border-radius: 8px; }
+/* CALENDAR VIEW ICONS */
+.calendar-view-icons { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
+.calendar-view-icons button { background: rgba(255,255,255,0.2); border: none; border-radius: 6px; padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.calendar-view-icons button.active { background: var(--calendar-icon-active); }
 
 /* BOTTOM NAV */
 .bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
@@ -70,3 +67,16 @@ html, body {
   .home-card { flex: 1 1 90%; min-width: 90%; }
   #login-screen { padding-top: 60px; }
 }
+
+/* HEALTH SCREEN */
+.health-container { display:flex; flex-direction:column; gap:10px; padding:16px; }
+#calendar-entries { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.calendar-container .calendar-cell { border:1px solid rgba(255,255,255,0.3); padding:4px; min-height:60px; position:relative; }
+.entry { display:block; font-size:12px; margin-top:2px; padding:2px 4px; border-radius:4px; color:#fff; }
+.entry.migraine { background:#e74c3c; }
+.entry.tension { background:#f39c12; }
+.entry.other { background:#3498db; }
+.entry.medication { background:#2ecc71; }
+
+.supplement-list div { display:flex; justify-content:space-between; align-items:center; padding:4px 0; }
+.supplement-list button { background:red; color:#fff; border:none; border-radius:4px; padding:2px 6px; cursor:pointer; }
