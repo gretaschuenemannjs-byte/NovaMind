@@ -70,7 +70,6 @@ navButtons.forEach(btn=>{
 
 // --- Health-Screen: Schmerzeingabe ---
 
-// Datum & Uhrzeit automatisch setzen
 const painDate = document.getElementById('pain-date');
 const painTime = document.getElementById('pain-time');
 
@@ -78,12 +77,10 @@ const now = new Date();
 painDate.value = now.toISOString().split('T')[0];
 painTime.value = now.toTimeString().split(' ')[0].substring(0,5);
 
-// Schmerzstärke Slider
 const painLevel = document.getElementById('pain-level');
 const painLevelValue = document.getElementById('pain-level-value');
 painLevel.addEventListener('input', ()=>{ painLevelValue.textContent = painLevel.value; });
 
-// Medikamente hinzufügen
 const addMedBtn = document.getElementById('add-medication-btn');
 const medOther = document.getElementById('medication-other');
 const medList = document.querySelector('.medication-list');
@@ -102,7 +99,6 @@ addMedBtn.addEventListener('click', ()=>{
   }
 });
 
-// Speichern-Button (erst mal nur Konsolenausgabe)
 document.getElementById('save-pain-entry').addEventListener('click', ()=>{
   const painTypeSelect = document.getElementById('pain-type-select');
   const entry = {
