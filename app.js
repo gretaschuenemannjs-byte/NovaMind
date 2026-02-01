@@ -57,3 +57,62 @@ navButtons.forEach(btn=>{
     btn.classList.add("active");
   });
 });
+
+// NAVIGATION
+navButtons.forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+    document.getElementById(btn.dataset.target).classList.add("active");
+    btn.classList.add("active");
+  });
+});
+
+// --- Health-Screen: Schmerzeingabe ---
+
+// Datum & Uhrzeit automatisch setzen
+const painDate = document.getElementById('pain-date');
+const painTime = document.getElementById('pain-time');
+
+const now = new Date();
+painDate.value = now.toISOString().split('T')[0];
+painTime.value = now.toTimeString().split(' ')[0].substring(0,5);
+
+// Schmerzstärke Slider
+const painLevel = document.getElementById('pain-level');
+const painLevelValue = document.getElementById('pain-level-value');
+painLevel.addEventListener('input', ()=>{ painLevelValue.textContent = painLevel.value; });
+
+// Medikamente hinzufügen
+const addMedBtn = document.getElementById('add-medication-btn');
+const medOther = document.getElementById('medication-other');
+const medList = document.querySelector('.medication-list');
+
+addMedBtn.addEventListener('click', ()=>{
+  const val = medOther.value.trim();
+  if(val){
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.value = val;
+    label.appendChild(checkbox);
+    label.append(val);
+    medList.appendChild(label);
+    medOther.value = '';
+  }
+});
+
+// Speichern-Button (erst mal nur Konsolenausgabe)
+document.getElementById('save-pain-entry').addEventListener('click', ()=>{
+  const painTypeSelect = document.getElementById('pain-type-select');
+  const entry = {
+    date: painDate.value,
+    time: painTime.value,
+    level: painLevel.value,
+    type: painTypeSelect.value,
+    otherType: document.getElementById('pain-type-other').value,
+    medications: Array.from(medList.querySelectorAll('input[type="checkbox"]:checked')).map(c=>c.value)
+  };
+  console.log(entry);
+  alert('Eintrag gespeichert (siehe Konsole)');
+});
