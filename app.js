@@ -1,25 +1,37 @@
-// -------------------
-// Elemente
-// -------------------
+// FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+  authDomain: "novamind-gs.firebaseapp.com",
+  databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "novamind-gs",
+  storageBucket: "novamind-gs.firebasestorage.app",
+  messagingSenderId: "278309634253",
+  appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.database();
+
+// SCREENS
 const loginScreen = document.getElementById("login-screen");
 const homeScreen = document.getElementById("home-screen");
 const healthScreen = document.getElementById("health-screen");
 const settingsScreen = document.getElementById("settings-screen");
+
+// ELEMENTS
 const loginBtn = document.getElementById("login-btn");
 const registerBtn = document.getElementById("register-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const homeCardsContainer = document.getElementById("home-cards");
+const healthCardsContainer = document.getElementById("health-cards");
 const currentDateEl = document.getElementById("current-date");
 const fontSelect = document.getElementById("font-select");
-const healthCardsContainer = document.getElementById("health-cards");
-
 const navButtons = document.querySelectorAll(".nav-btn");
 
+// STATE
 let isLoggedIn = false;
-
-// -------------------
-// HOME SCREEN DATEN
-// -------------------
 let homeCardsData = [
   { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }, { text: "Meeting vorbereiten", done: false }]},
   { type: "routines", title: "Routinen", tasks: [{ text: "Meditation", done: false }, { text: "Workout", done: false }]},
@@ -30,30 +42,25 @@ let homeCardsData = [
   { type: "motivation", title: "Motivation", quote: "Du schaffst alles, was du dir vornimmst!"}
 ];
 
-// -------------------
-// HEALTH SCREEN DATEN
-// -------------------
-let healthEntries = []; // {date, time, painLevel, painType, meds:[{name}], notes}
+let healthData = {
+  entries: [], // jeder Eintrag: {date, time, painLevel, painType, painOther, meds:[{name,hours}], notes}
+  supplements: [] // jeder Eintrag: {name, time, taken}
+};
 
-// -------------------
 // DATUM
-// -------------------
 function updateDate() {
   const now = new Date();
   const options = { weekday:"short", day:"numeric", month:"short", year:"numeric"};
   currentDateEl.textContent = now.toLocaleDateString("de-DE", options);
 }
 
-// -------------------
-// HOME CARDS RENDERN
-// -------------------
+// HOME-CARDS RENDER
 function renderHomeCards() {
   homeCardsContainer.innerHTML = "";
-  homeCardsData.forEach((card, index) => {
+  homeCardsData.forEach((card,index)=>{
     const div = document.createElement("div");
     div.classList.add("home-card");
     div.dataset.index = index;
-
     const title = document.createElement("div");
     title.classList.add("card-title");
     title.textContent = card.title;
@@ -62,68 +69,57 @@ function renderHomeCards() {
     const content = document.createElement("div");
     content.classList.add("card-content");
 
-    if(card.type === "calendar") {
+    if(card.type==="calendar"){
       const iconBar = document.createElement("div");
       iconBar.classList.add("calendar-view-icons");
-      const views = ["month", "week", "day"];
-      views.forEach(v => {
-        const btn = document.createElement("button");
-        btn.innerHTML = v==="month"? "▦": v==="week"? "▮▮▮▮▮▮▮":"▬▬▬▬▬";
-        btn.classList.toggle("active", card.view === v);
-        btn.addEventListener("click", ()=>{ card.view=v; renderHomeCards(); });
+      ["month","week","day"].forEach(v=>{
+        const btn=document.createElement("button");
+        btn.innerHTML=v==="month"? "▦": v==="week"? "▮▮▮▮▮▮▮":"▬▬▬▬▬";
+        btn.classList.toggle("active",card.view===v);
+        btn.addEventListener("click",()=>{card.view=v; renderHomeCards();});
         iconBar.appendChild(btn);
       });
       div.appendChild(iconBar);
 
-      if(card.view === "day") {
-        content.innerHTML = "";
+      if(card.view==="day"){
         for(let i=0;i<24;i++){
-          const hourDiv = document.createElement("div");
-          hourDiv.textContent = `${i}:00 - ${i+1}:00`;
+          const hourDiv=document.createElement("div");
+          hourDiv.textContent=`${i}:00 - ${i+1}:00`;
           content.appendChild(hourDiv);
         }
-      } else if(card.view === "week") {
-        const weekDiv = document.createElement("div");
+      }else if(card.view==="week"){
+        const weekDiv=document.createElement("div");
         weekDiv.style.display="flex"; weekDiv.style.gap="2px";
         for(let i=0;i<7;i++){
-          const dayCol = document.createElement("div");
+          const dayCol=document.createElement("div");
           dayCol.style.flex="1"; dayCol.style.border="1px solid rgba(255,255,255,0.3)"; dayCol.style.height="80px";
           weekDiv.appendChild(dayCol);
         }
         content.appendChild(weekDiv);
-      } else if(card.view === "month") {
-        const monthDiv = document.createElement("div");
+      }else{
+        const monthDiv=document.createElement("div");
         monthDiv.style.display="grid"; monthDiv.style.gridTemplateColumns="repeat(7,1fr)"; monthDiv.style.gap="2px";
         for(let i=0;i<30;i++){
-          const dayCell = document.createElement("div");
+          const dayCell=document.createElement("div");
           dayCell.style.border="1px solid rgba(255,255,255,0.3)"; dayCell.style.height="40px";
           monthDiv.appendChild(dayCell);
         }
         content.appendChild(monthDiv);
       }
-    } else if(card.type === "motivation") {
+
+    }else if(card.type==="motivation"){
       content.classList.add("motivation-card");
-      content.textContent = card.quote;
-    } else {
-      card.tasks.forEach((task) => {
-        const taskDiv = document.createElement("div");
+      content.textContent=card.quote;
+    }else{
+      card.tasks.forEach(task=>{
+        const taskDiv=document.createElement("div");
         taskDiv.classList.add("card-task");
         if(task.done) taskDiv.classList.add("completed");
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = task.done;
-        checkbox.addEventListener("change", () => {
-          task.done = checkbox.checked;
-          taskDiv.classList.toggle("completed", task.done);
-        });
-
-        const label = document.createElement("label");
-        label.textContent = task.text;
-
-        taskDiv.appendChild(checkbox);
-        taskDiv.appendChild(label);
-        content.appendChild(taskDiv);
+        const checkbox=document.createElement("input");
+        checkbox.type="checkbox"; checkbox.checked=task.done;
+        checkbox.addEventListener("change",()=>{task.done=checkbox.checked; taskDiv.classList.toggle("completed",task.done);});
+        const label=document.createElement("label"); label.textContent=task.text;
+        taskDiv.appendChild(checkbox); taskDiv.appendChild(label); content.appendChild(taskDiv);
       });
     }
 
@@ -131,171 +127,165 @@ function renderHomeCards() {
     homeCardsContainer.appendChild(div);
   });
 
-  // Drag & Drop
-  let dragSrcIndex = null;
-  homeCardsContainer.querySelectorAll(".home-card").forEach(card => {
-    card.draggable = true;
-    card.addEventListener("dragstart", (e) => {
-      dragSrcIndex = card.dataset.index;
-      e.dataTransfer.effectAllowed = "move";
-    });
-    card.addEventListener("dragover", (e) => e.preventDefault());
-    card.addEventListener("drop", (e) => {
+  // DRAG & DROP
+  let dragSrcIndex=null;
+  homeCardsContainer.querySelectorAll(".home-card").forEach(card=>{
+    card.draggable=true;
+    card.addEventListener("dragstart",(e)=>{dragSrcIndex=card.dataset.index; e.dataTransfer.effectAllowed="move";});
+    card.addEventListener("dragover",(e)=>e.preventDefault());
+    card.addEventListener("drop",(e)=>{
       e.preventDefault();
-      const targetIndex = card.dataset.index;
-      const temp = homeCardsData[dragSrcIndex];
-      homeCardsData.splice(dragSrcIndex, 1);
-      homeCardsData.splice(targetIndex, 0, temp);
+      const targetIndex=card.dataset.index;
+      const temp=homeCardsData[dragSrcIndex];
+      homeCardsData.splice(dragSrcIndex,1);
+      homeCardsData.splice(targetIndex,0,temp);
       renderHomeCards();
     });
   });
 }
 
-// -------------------
-// HEALTH SCREEN RENDERN
-// -------------------
-function renderHealthScreen() {
-  healthCardsContainer.innerHTML = "";
+// HEALTH SCREEN RENDER
+function renderHealthScreen(){
+  healthCardsContainer.innerHTML="";
+  // Schmerz Eintrag Card
+  const entryCard=document.createElement("div");
+  entryCard.classList.add("health-card");
 
-  // Neue Eintrag Kachel
-  const addCard = document.createElement("div");
-  addCard.classList.add("health-card");
+  // DATE & TIME
+  const now=new Date();
+  const dateInput=document.createElement("input");
+  dateInput.type="date"; dateInput.value=now.toISOString().split("T")[0];
+  const timeInput=document.createElement("input");
+  timeInput.type="time"; timeInput.value=now.toTimeString().split(" ")[0].slice(0,5);
 
-  const now = new Date();
-  const dateStr = now.toISOString().split("T")[0];
-  const timeStr = now.toTimeString().split(" ")[0].substring(0,5);
+  const dateTimeContainer=document.createElement("div");
+  dateTimeContainer.style.display="flex"; dateTimeContainer.style.gap="8px";
+  dateTimeContainer.appendChild(dateInput); dateTimeContainer.appendChild(timeInput);
+  entryCard.appendChild(dateTimeContainer);
 
-  addCard.innerHTML = `
-    <label>Datum:</label>
-    <input type="date" id="health-date" value="${dateStr}">
-    <label>Uhrzeit:</label>
-    <input type="time" id="health-time" value="${timeStr}">
-    <label>Schmerzstärke:</label>
-    <input type="range" id="pain-level" min="0" max="10" value="0">
-    <label>Schmerztyp:</label>
-    <input type="text" id="pain-type" placeholder="z.B. Migräne">
-    <label>Medikamente:</label>
-    <select multiple id="meds-select">
-      <option value="Triptane">Triptane</option>
-      <option value="Paracetamol">Paracetamol</option>
-      <option value="Ibuprofen">Ibuprofen</option>
-    </select>
-    <input type="text" id="custom-med" placeholder="Eigene Medikamente">
-    <label>Notizen:</label>
-    <textarea id="notes" placeholder="Notizen..."></textarea>
-    <button id="save-health-entry">Speichern</button>
-  `;
-  healthCardsContainer.appendChild(addCard);
+  // Schmerzstärke Slider
+  const painLabel=document.createElement("label"); painLabel.textContent="Schmerzstärke";
+  const painSlider=document.createElement("input");
+  painSlider.type="range"; painSlider.min="1"; painSlider.max="10"; painSlider.value="1";
+  entryCard.appendChild(painLabel); entryCard.appendChild(painSlider);
 
-  // Event Listener Speichern
-  document.getElementById("save-health-entry").addEventListener("click", () => {
-    const entry = {
-      date: document.getElementById("health-date").value,
-      time: document.getElementById("health-time").value,
-      painLevel: parseInt(document.getElementById("pain-level").value),
-      painType: document.getElementById("pain-type").value,
-      meds: Array.from(document.getElementById("meds-select").selectedOptions).map(o=>o.value),
-      customMed: document.getElementById("custom-med").value,
-      notes: document.getElementById("notes").value
+  // Schmerzart
+  const painTypeLabel=document.createElement("label"); painTypeLabel.textContent="Schmerzart";
+  const painTypeSelect=document.createElement("select");
+  ["Migräne","Kopfschmerz","Sonstige"].forEach(type=>{const opt=document.createElement("option"); opt.value=type; opt.textContent=type; painTypeSelect.appendChild(opt);});
+  const painOtherInput=document.createElement("input"); painOtherInput.type="text"; painOtherInput.placeholder="Weitere Schmerzen";
+  entryCard.appendChild(painTypeLabel); entryCard.appendChild(painTypeSelect); entryCard.appendChild(painOtherInput);
+
+  // Medikamente
+  const medsLabel=document.createElement("label"); medsLabel.textContent="Tabletten genommen";
+  const medsContainer=document.createElement("div"); medsContainer.style.display="flex"; medsContainer.style.flexWrap="wrap"; medsContainer.style.gap="4px";
+  ["Triptane","Paracetamol","Ibuprofen"].forEach(med=>{
+    const btn=document.createElement("button"); btn.textContent=med;
+    btn.addEventListener("click",()=>{addMed(med);});
+    medsContainer.appendChild(btn);
+  });
+  const otherMedInput=document.createElement("input"); otherMedInput.type="text"; otherMedInput.placeholder="Weitere Medikamente";
+  medsContainer.appendChild(otherMedInput);
+
+  entryCard.appendChild(medsLabel); entryCard.appendChild(medsContainer);
+
+  // Notizen
+  const notesLabel=document.createElement("label"); notesLabel.textContent="Notizen";
+  const notesInput=document.createElement("textarea"); notesInput.placeholder="Eigene Notizen";
+  entryCard.appendChild(notesLabel); entryCard.appendChild(notesInput);
+
+  // Buttons speichern/löschen/PDF
+  const btnContainer=document.createElement("div"); btnContainer.style.display="flex"; btnContainer.style.gap="8px";
+  const saveBtn=document.createElement("button"); saveBtn.textContent="Speichern"; saveBtn.addEventListener("click",()=>saveEntry());
+  const deleteBtn=document.createElement("button"); deleteBtn.textContent="Löschen"; deleteBtn.addEventListener("click",()=>deleteEntry());
+  const pdfBtn=document.createElement("button"); pdfBtn.textContent="Export PDF"; pdfBtn.addEventListener("click",()=>exportPDF());
+  btnContainer.appendChild(saveBtn); btnContainer.appendChild(deleteBtn); btnContainer.appendChild(pdfBtn);
+
+  entryCard.appendChild(btnContainer);
+
+  healthCardsContainer.appendChild(entryCard);
+
+  function addMed(name){
+    if(!otherMedInput.value) return;
+    const medName=otherMedInput.value;
+    otherMedInput.value="";
+  }
+
+  function saveEntry(){
+    const entry={
+      date:dateInput.value,
+      time:timeInput.value,
+      painLevel:painSlider.value,
+      painType:painTypeSelect.value,
+      painOther:painOtherInput.value,
+      meds:[], notes:notesInput.value
     };
-    healthEntries.push(entry);
-    renderHealthCalendar();
-  });
+    healthData.entries.push(entry);
+    renderHealthScreen();
+  }
 
-  renderHealthCalendar();
+  function deleteEntry(){
+    healthData.entries.pop();
+    renderHealthScreen();
+  }
+
+  function exportPDF(){
+    alert("PDF-Export (platzhalter)");
+  }
 }
 
-// -------------------
-// HEALTH CALENDAR RENDERN
-// -------------------
-function renderHealthCalendar() {
-  // Entferne alte Kalenderkarten
-  const existing = document.querySelectorAll(".health-card.calendar-entry");
-  existing.forEach(e => e.remove());
-
-  // Gruppiere nach Datum
-  const grouped = {};
-  healthEntries.forEach(e => {
-    if(!grouped[e.date]) grouped[e.date]=[];
-    grouped[e.date].push(e);
-  });
-
-  Object.keys(grouped).sort().forEach(date => {
-    grouped[date].forEach((entry, idx) => {
-      const card = document.createElement("div");
-      card.classList.add("health-card", "calendar-entry");
-      card.innerHTML = `
-        <strong>${date} ${entry.time}</strong>
-        <div>Schmerzstärke: ${entry.painLevel}</div>
-        <div>Schmerztyp: ${entry.painType}</div>
-        <div>Medikamente: ${[...entry.meds, entry.customMed].filter(Boolean).join(", ")}</div>
-        <div>Notizen: ${entry.notes}</div>
-        <button class="delete-entry">Löschen</button>
-      `;
-      healthCardsContainer.appendChild(card);
-
-      card.querySelector(".delete-entry").addEventListener("click", ()=>{
-        const index = healthEntries.indexOf(entry);
-        if(index>-1) healthEntries.splice(index,1);
-        renderHealthCalendar();
-      });
-    });
-  });
-}
-
-// -------------------
 // NAVIGATION
-// -------------------
-navButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    const target = document.getElementById(btn.dataset.target);
+navButtons.forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    const target=document.getElementById(btn.dataset.target);
     if(target) target.classList.add("active");
-    navButtons.forEach(b => b.classList.remove("active"));
+    navButtons.forEach(b=>b.classList.remove("active"));
     btn.classList.add("active");
-
     if(btn.dataset.target==="health-screen") renderHealthScreen();
   });
 });
 
-// -------------------
-// SCHRIFTART ÄNDERN
-// -------------------
-fontSelect.addEventListener("change", () => {
-  document.body.style.fontFamily = fontSelect.value;
-});
+// Schriftart
+fontSelect.addEventListener("change",()=>{document.body.style.fontFamily=fontSelect.value;});
 
-// -------------------
-// UI UPDATE
-// -------------------
-function updateUI() {
-  if(isLoggedIn) {
-    loginScreen.style.display = "none";
+// UI Update
+function updateUI(){
+  if(isLoggedIn){
+    loginScreen.style.display="none";
     homeScreen.classList.add("active");
-    document.querySelector(".bottom-nav").style.display = "flex";
-
-    renderHomeCards();
-    updateDate();
-  } else {
-    loginScreen.style.display = "flex";
-    loginScreen.style.opacity = 1;
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.querySelector(".bottom-nav").style.display = "none";
+    document.querySelector(".bottom-nav").style.display="flex";
+    renderHomeCards(); updateDate();
+  }else{
+    loginScreen.style.display="flex";
+    loginScreen.style.opacity=1;
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.querySelector(".bottom-nav").style.display="none";
   }
 }
 
-// -------------------
 // LOGIN / REGISTER
-// -------------------
-loginBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
-registerBtn.addEventListener("click", () => { isLoggedIn = true; updateUI(); });
+loginBtn.addEventListener("click",()=>{
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+  auth.signInWithEmailAndPassword(email,password)
+    .then(()=>{isLoggedIn=true; updateUI();})
+    .catch(err=>alert(err.message));
+});
 
-// -------------------
+registerBtn.addEventListener("click",()=>{
+  const email=document.getElementById("email").value;
+  const password=document.getElementById("password").value;
+  auth.createUserWithEmailAndPassword(email,password)
+    .then(()=>{isLoggedIn=true; updateUI();})
+    .catch(err=>alert(err.message));
+});
+
 // LOGOUT
-// -------------------
-logoutBtn.addEventListener("click", () => { isLoggedIn = false; updateUI(); });
+logoutBtn.addEventListener("click",()=>{auth.signOut();isLoggedIn=false;updateUI();});
 
-// -------------------
+// CHECK LOGIN STATE
+auth.onAuthStateChanged(user=>{isLoggedIn=!!user; updateUI();});
+
 // INITIAL
-// -------------------
 updateUI();
