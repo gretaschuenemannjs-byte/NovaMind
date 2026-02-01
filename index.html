@@ -5,6 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NovaMindGS</title>
 <link rel="stylesheet" href="style.css">
+
+<!-- jsPDF für PDF Export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+  import { getDatabase, ref, set, push, get, child, update, remove } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
+    authDomain: "novamind-gs.firebaseapp.com",
+    databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "novamind-gs",
+    storageBucket: "novamind-gs.firebasestorage.app",
+    messagingSenderId: "278309634253",
+    appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const db = getDatabase();
+
+  window.firebaseApp = { auth, db, ref, set, push, get, child, update, remove }; // global verfügbar für app.js
+</script>
+
 </head>
 <body>
 
@@ -47,89 +74,24 @@
 <!-- HEALTH SCREEN -->
 <div class="screen" id="health-screen">
   <h2>Gesundheit</h2>
-  <div class="health-container">
-    <label>Schmerzstärke: <span id="pain-intensity-label">5</span></label>
-    <input type="range" id="pain-intensity" min="1" max="10" value="5">
-    
-    <label>Schmerztyp:</label>
-    <select id="pain-type">
-      <option value="Migräne">Migräne</option>
-      <option value="Spannungskopfschmerz">Spannungskopfschmerz</option>
-      <option value="Andere">Andere</option>
-    </select>
-
-    <label>Notizen:</label>
-    <textarea id="pain-notes" placeholder="Zusätzliche Infos"></textarea>
-
-    <label>Medikamente:</label>
-    <div>
-      <input type="checkbox" class="med-checkbox" value="Triptane" id="med-triptane">
-      <label for="med-triptane">Triptane</label>
-      <input type="checkbox" class="med-checkbox" value="Paracetamol" id="med-paracetamol">
-      <label for="med-paracetamol">Paracetamol</label>
-      <input type="checkbox" class="med-checkbox" value="Ibuprofen" id="med-ibuprofen">
-      <label for="med-ibuprofen">Ibuprofen</label>
-    </div>
-
-    <button id="pain-save-btn">Eintrag speichern</button>
-    <button id="pain-export-btn">Exportieren (CSV)</button>
-
-    <h3>Kalenderübersicht</h3>
-    <div id="calendar-entries" class="calendar-container"></div>
-
-    <h3>Supplements / tägliche Tabletten</h3>
-    <input type="text" id="supplement-name" placeholder="Name">
-    <input type="time" id="supplement-time">
-    <button id="supplement-add-btn">Hinzufügen</button>
-    <div id="supplement-list" class="supplement-list"></div>
-  </div>
+  <div class="home-cards" id="health-cards"></div>
 </div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <button class="nav-btn" data-target="notes-screen" title="Notizen">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <line x1="4" y1="6" x2="20" y2="6"/>
-      <line x1="4" y1="12" x2="20" y2="12"/>
-      <line x1="4" y1="18" x2="20" y2="18"/>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="todos-screen" title="To-Dos">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <rect x="4" y="5" width="16" height="16" rx="2"/>
-      <path d="M6 12l4 4 8-8"/>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="routines-screen" title="Routine">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <circle cx="12" cy="12" r="10"/>
-      <path d="M12 6v6l4 2"/>
-    </svg>
-  </button>
-  <button class="nav-btn active" data-target="home-screen" title="Home">
-    <svg viewBox="0 0 24 24" width="28" height="28" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M3 12l9-9 9 9v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-    </svg>
-  </button>
-  <button class="nav-btn" data-target="calendar-screen" title="Kalender">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <rect x="3" y="4" width="18" height="18" rx="2"/>
-      <path d="M16 2v4M8 2v4"/>
-    </svg>
-  </button>
+  <button class="nav-btn" data-target="notes-screen" title="Notizen">📝</button>
+  <button class="nav-btn" data-target="todos-screen" title="To-Dos">✅</button>
+  <button class="nav-btn" data-target="routines-screen" title="Routine">⏱️</button>
+  <button class="nav-btn active" data-target="home-screen" title="Home">🏠</button>
+  <button class="nav-btn" data-target="calendar-screen" title="Kalender">📅</button>
   <button class="nav-btn" data-target="health-screen" title="Gesundheit">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M12 21s-6-4.35-10-10 4-10 10-4c6-6 10 4 10 10s-6 10-10 10z"/>
+      <path d="M12 21C12 21 4 13.35 4 8C4 5 6 3 9 3C11 3 12 4 12 4C12 4 13 3 15 3C18 3 20 5 20 8C20 13.35 12 21 12 21Z"/>
     </svg>
   </button>
-  <button class="nav-btn" data-target="profile-screen" title="Profil">
-    <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <circle cx="12" cy="8" r="4"/>
-      <path d="M4 20c0-4 8-4 8-4s8 0 8 4"/>
-    </svg>
-  </button>
+  <button class="nav-btn" data-target="profile-screen" title="Profil">👤</button>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js" type="module"></script>
 </body>
 </html>
