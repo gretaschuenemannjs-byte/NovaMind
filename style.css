@@ -4,7 +4,6 @@
   --accent-color: rgba(50,160,100,0.85);
   --checked-color: #aaa;
   --calendar-icon-active: #32a064;
-  --health-card-bg: rgba(255,255,255,0.15);
 }
 
 html, body {
@@ -15,7 +14,6 @@ html, body {
   background: url('login-background.png') no-repeat center center/cover;
   box-sizing: border-box;
   color: #fff;
-  overflow-x: hidden;
 }
 
 /* LOGIN SCREEN */
@@ -67,21 +65,8 @@ html, body {
 .settings-buttons button, .settings-buttons select { padding: 12px; border-radius: 12px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; font-size: 16px; }
 .settings-buttons select { appearance: none; }
 
-/* HEALTH SCREEN */
-.health-container { display: flex; flex-wrap: wrap; gap: 16px; }
-.health-input { background: var(--health-card-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 16px; flex: 1 1 300px; min-width: 280px; max-width: 400px; display: flex; flex-direction: column; gap: 10px; }
-.health-input .input-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.health-input input, .health-input select { padding: 8px; border-radius: 10px; border: none; background: rgba(0,0,0,0.3); color: #fff; font-size: 14px; }
-.health-input select[multiple] { height: 60px; }
-.health-input button { padding: 10px; border-radius: 12px; background: var(--accent-color); border: none; color: #fff; cursor: pointer; flex: 1; }
-
-/* Health Calendar */
-.health-calendar { flex: 2 1 500px; min-width: 300px; background: var(--health-card-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 16px; overflow-x: auto; display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-start; }
-
 /* RESPONSIVE */
 @media (max-width: 480px) {
   .home-card { flex: 1 1 90%; min-width: 90%; }
   #login-screen { padding-top: 60px; }
-  .health-container { flex-direction: column; }
-  .health-calendar { flex: 1 1 100%; }
 }
