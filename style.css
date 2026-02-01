@@ -34,19 +34,17 @@ html, body {
 .home-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .home-title h2 { margin: 0; font-weight: normal; }
 .home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-
 .home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
 .home-card:active { cursor: grabbing; }
-
 .card-title { font-weight: bold; margin-bottom: 8px; }
 .card-content { font-size: 14px; }
 
-.card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
-.card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
-.card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
-.card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
-
-.motivation-card { text-align: center; font-style: italic; font-size: 16px; }
+/* HEALTH SCREEN */
+.health-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+.health-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 12px 14px; flex: 1 1 280px; min-width: 240px; max-width: 360px; }
+.health-card input, .health-card select, .health-card textarea { background: rgba(255,255,255,0.2); color: #fff; border: none; border-radius: 12px; margin: 6px 0; padding: 8px; width: 100%; box-sizing: border-box; }
+.health-card textarea { resize: vertical; }
+.health-card button { background: var(--accent-color); border: none; border-radius: 12px; padding: 10px; color: #fff; cursor: pointer; width: 100%; margin-top: 8px; }
 
 /* BOTTOM NAV */
 .bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); }
@@ -58,14 +56,6 @@ html, body {
 .settings-buttons { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
 .settings-buttons button, .settings-buttons select { padding: 12px; border-radius: 12px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; font-size: 16px; }
 .settings-buttons select { appearance: none; }
-
-/* HEALTH SCREEN */
-.health-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-.health-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; min-width: 260px; max-width: 360px; display: flex; flex-direction: column; gap: 8px; }
-.health-card h3 { margin: 0; font-weight: bold; }
-.health-card input, .health-card select, .health-card textarea { width: 100%; padding: 8px; border-radius: 10px; border: none; background: rgba(255,255,255,0.2); color: #fff; font-size: 14px; }
-.health-card button { background: var(--accent-color); border: none; border-radius: 12px; padding: 10px; color: #fff; cursor: pointer; transition: background 0.3s ease; }
-.health-card button:hover { background: rgba(30,120,80,0.85); }
 
 /* RESPONSIVE */
 @media (max-width: 480px) {
