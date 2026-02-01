@@ -47,42 +47,39 @@
 <!-- HEALTH SCREEN -->
 <div class="screen" id="health-screen">
   <h2>Gesundheit</h2>
-
   <div class="health-container">
-    <h3>Schmerztracken</h3>
-    <label for="pain-type">Schmerztyp:</label>
+    <label>Schmerzstärke: <span id="pain-intensity-label">5</span></label>
+    <input type="range" id="pain-intensity" min="1" max="10" value="5">
+    
+    <label>Schmerztyp:</label>
     <select id="pain-type">
       <option value="Migräne">Migräne</option>
       <option value="Spannungskopfschmerz">Spannungskopfschmerz</option>
       <option value="Andere">Andere</option>
     </select>
 
-    <label for="pain-intensity">Schmerzstärke: <span id="pain-intensity-label">5</span></label>
-    <input type="range" id="pain-intensity" min="0" max="10" value="5">
+    <label>Notizen:</label>
+    <textarea id="pain-notes" placeholder="Zusätzliche Infos"></textarea>
 
-    <label for="pain-notes">Notizen:</label>
-    <textarea id="pain-notes" placeholder="z.B. wann aufgetreten"></textarea>
-
-    <div class="medications">
-      <label>Medikamente:</label><br>
-      <input type="checkbox" class="med-checkbox" value="Triptane"> Triptane
-      <input type="checkbox" class="med-checkbox" value="Paracetamol"> Paracetamol
-      <input type="checkbox" class="med-checkbox" value="Ibuprofen"> Ibuprofen
+    <label>Medikamente:</label>
+    <div>
+      <input type="checkbox" class="med-checkbox" value="Triptane" id="med-triptane">
+      <label for="med-triptane">Triptane</label>
+      <input type="checkbox" class="med-checkbox" value="Paracetamol" id="med-paracetamol">
+      <label for="med-paracetamol">Paracetamol</label>
+      <input type="checkbox" class="med-checkbox" value="Ibuprofen" id="med-ibuprofen">
+      <label for="med-ibuprofen">Ibuprofen</label>
     </div>
 
     <button id="pain-save-btn">Eintrag speichern</button>
     <button id="pain-export-btn">Exportieren (CSV)</button>
 
-    <h3>Kalender</h3>
+    <h3>Kalenderübersicht</h3>
     <div id="calendar-entries" class="calendar-container"></div>
 
     <h3>Supplements / tägliche Tabletten</h3>
-    <label for="supplement-name">Name:</label>
-    <input type="text" id="supplement-name" placeholder="Vitamin D">
-
-    <label for="supplement-time">Uhrzeit:</label>
+    <input type="text" id="supplement-name" placeholder="Name">
     <input type="time" id="supplement-time">
-
     <button id="supplement-add-btn">Hinzufügen</button>
     <div id="supplement-list" class="supplement-list"></div>
   </div>
@@ -122,7 +119,7 @@
   </button>
   <button class="nav-btn" data-target="health-screen" title="Gesundheit">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M12 21C12 21 4 13.5 4 8.5C4 5 7 2 12 6C17 2 20 5 20 8.5C20 13.5 12 21 12 21Z"/>
+      <path d="M12 21s-6-4.35-10-10 4-10 10-4c6-6 10 4 10 10s-6 10-10 10z"/>
     </svg>
   </button>
   <button class="nav-btn" data-target="profile-screen" title="Profil">
@@ -133,28 +130,6 @@
   </button>
 </div>
 
-<!-- Firebase SDK + App.js -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
-  authDomain: "novamind-gs.firebaseapp.com",
-  databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "novamind-gs",
-  storageBucket: "novamind-gs.firebasestorage.app",
-  messagingSenderId: "278309634253",
-  appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-import './app.js';
-</script>
-
+<script src="app.js"></script>
 </body>
 </html>
-
