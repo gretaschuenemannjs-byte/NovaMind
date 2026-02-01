@@ -16,7 +16,7 @@ html, body {
   color: #fff;
 }
 
-/* LOGIN SCREEN */
+/* LOGIN */
 #login-screen { display: flex; align-items: flex-start; justify-content: center; height: 100%; width: 100%; padding-top: 80px; }
 .login-form { background: var(--glass-bg); backdrop-filter: blur(14px); padding: 28px 24px; border-radius: 20px; text-align: center; width: 85%; max-width: 340px; box-shadow: 0 8px 30px rgba(0,0,0,0.25); }
 .login-logo { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 4px 14px rgba(0,0,0,0.25); border: 2px solid rgba(255,255,255,0.4); }
@@ -30,43 +30,42 @@ html, body {
 .screen { display: none; opacity: 0; padding: 16px; }
 .screen.active { display: block; opacity: 1; }
 
-/* HOME SCREEN */
+/* HOME */
 .home-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
 .home-title h2 { margin: 0; font-weight: normal; }
 .home-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
-
 .home-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; cursor: grab; transition: transform 0.2s ease, box-shadow 0.2s ease; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
 .home-card:active { cursor: grabbing; }
-
 .card-title { font-weight: bold; margin-bottom: 8px; }
 .card-content { font-size: 14px; }
-
 .card-task { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
 .card-task input[type="checkbox"] { transform: scale(1.2); cursor: pointer; }
 .card-task.completed label { text-decoration: line-through; color: var(--checked-color); }
 .card-task.completed input[type="checkbox"] { accent-color: var(--checked-color); }
-
-/* MOTIVATION CARD */
 .motivation-card { text-align: center; font-style: italic; font-size: 16px; }
 
-/* CALENDAR VIEW ICONS */
-.calendar-view-icons { position: absolute; top: 8px; right: 8px; display: flex; gap: 6px; }
-.calendar-view-icons button { background: rgba(255,255,255,0.2); border: none; border-radius: 6px; padding: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-.calendar-view-icons button.active { background: var(--calendar-icon-active); }
+/* HEALTH */
+.health-cards { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin-top: 16px; }
+.health-card { background: var(--glass-bg); backdrop-filter: blur(14px); border-radius: 18px; padding: 14px 16px; flex: 1 1 260px; min-width: 240px; max-width: 360px; position: relative; }
+.health-card h3 { margin: 0 0 8px 0; font-weight: bold; }
+.health-card input, .health-card select, .health-card textarea { width: 100%; margin-bottom: 8px; padding: 8px; border-radius: 8px; border: none; }
+.health-card button { width: 100%; padding: 10px; border-radius: 10px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; }
+.health-card .medications { display: flex; flex-wrap: wrap; gap: 6px; }
+.health-card .medications span { background: rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 6px; cursor: pointer; }
 
 /* BOTTOM NAV */
-.bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.bottom-nav { display: flex; justify-content: space-between; align-items: center; position: fixed; bottom: 0; width: 100%; padding: 8px 6px; background: rgba(0,0,0,0.25); backdrop-filter: blur(14px); }
 .nav-btn { background: var(--glass-bg); border-radius: 12px; padding: 10px; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; flex: 1; margin: 0 2px; }
 .nav-btn svg { stroke: #fff; }
 .nav-btn.active { background: var(--accent-color); }
 
-/* SETTINGS BUTTONS */
+/* SETTINGS */
 .settings-buttons { display: flex; flex-direction: column; gap: 12px; padding: 20px; }
 .settings-buttons button, .settings-buttons select { padding: 12px; border-radius: 12px; border: none; background: var(--accent-color); color: #fff; cursor: pointer; font-size: 16px; }
 .settings-buttons select { appearance: none; }
 
 /* RESPONSIVE */
 @media (max-width: 480px) {
-  .home-card { flex: 1 1 90%; min-width: 90%; }
+  .home-card, .health-card { flex: 1 1 90%; min-width: 90%; }
   #login-screen { padding-top: 60px; }
 }
