@@ -2,20 +2,22 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebas
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 import { getDatabase } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-database.js";
 
+// --- Firebase Config ---
 const firebaseConfig = {
-  apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
-  authDomain: "novamind-gs.firebaseapp.com",
-  databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "novamind-gs",
-  storageBucket: "novamind-gs.firebasestorage.app",
-  messagingSenderId: "278309634253",
-  appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
+  apiKey: "...",
+  authDomain: "...",
+  databaseURL: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getDatabase();
 
+// --- DOM Elemente ---
 const loginScreen = document.getElementById("login-screen");
 const homeScreen = document.getElementById("home-screen");
 const settingsScreen = document.getElementById("settings-screen");
@@ -25,6 +27,7 @@ const registerBtn = document.getElementById("register-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const navButtons = document.querySelectorAll(".nav-btn");
 
+// --- LOGIN ---
 loginBtn.addEventListener("click", ()=>{
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -33,6 +36,7 @@ loginBtn.addEventListener("click", ()=>{
     .catch(err=>{ alert(err.message); });
 });
 
+// --- REGISTER ---
 registerBtn.addEventListener("click", ()=>{
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
@@ -41,24 +45,23 @@ registerBtn.addEventListener("click", ()=>{
     .catch(err=>{ alert(err.message); });
 });
 
-logoutBtn.addEventListener("click", ()=>{ signOut(auth).then(()=>{ location.reload(); }); });
+// --- LOGOUT ---
+logoutBtn.addEventListener("click", ()=>{
+  signOut(auth).then(()=>{ location.reload(); });
+});
 
+// --- AUTH STATE ---
 onAuthStateChanged(auth,(user)=>{
-  if(user){ loginScreen.style.display="none"; homeScreen.classList.add("active"); }
-  else { loginScreen.style.display="flex"; document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); }
+  if(user){ 
+    loginScreen.style.display="none"; 
+    homeScreen.classList.add("active"); 
+  } else { 
+    loginScreen.style.display="flex"; 
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active")); 
+  }
 });
 
-// NAVIGATION
-navButtons.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
-    document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-    document.getElementById(btn.dataset.target).classList.add("active");
-    btn.classList.add("active");
-  });
-});
-
-// NAVIGATION
+// --- NAVIGATION ---
 navButtons.forEach(btn=>{
   btn.addEventListener("click", ()=>{
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
@@ -69,7 +72,6 @@ navButtons.forEach(btn=>{
 });
 
 // --- Health-Screen: Schmerzeingabe ---
-
 const painDate = document.getElementById('pain-date');
 const painTime = document.getElementById('pain-time');
 
